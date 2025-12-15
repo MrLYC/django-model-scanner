@@ -25,9 +25,26 @@ Django model scanner requires Django to be installed for astroid type inference 
    ```bash
    python -c "import django; print(f'Django {django.get_version()}')"
    python -c "from django_model_scanner import checker; print('Scanner installed')"
+   django-scan --version
    ```
 
 ## Quick Test
+
+### Using the CLI (Recommended)
+
+Run the scanner with the simple CLI:
+
+```bash
+# Scan the example blog app
+django-scan -p examples/blog -o test_models.yaml
+
+# Or using module invocation
+python -m django_model_scanner -p examples/blog -o test_models.yaml
+```
+
+This should generate `test_models.yaml` with all 6 models from `examples/blog/models.py`.
+
+### Using Direct Scanner (Alternative)
 
 Run the test scanner (bypasses pylint):
 
@@ -37,7 +54,30 @@ python test_scan.py
 
 This should generate `test_output.yaml` with all 6 models from `examples/blog/models.py`.
 
-## Usage with Pylint
+## CLI Usage
+
+Once installed, use the scanner with simple commands:
+
+```bash
+# Basic usage - scan a project
+django-scan -p /path/to/project
+
+# Scan with custom output
+django-scan -p ./myapp -o models.yaml
+
+# Show help
+django-scan --help
+```
+
+### Module Invocation
+
+If the `django-scan` command is not in your PATH, use module invocation:
+
+```bash
+python -m django_model_scanner -p /path/to/project -o output.yaml
+```
+
+## Usage with Pylint (Advanced)
 
 Once installed, scan your Django models:
 
