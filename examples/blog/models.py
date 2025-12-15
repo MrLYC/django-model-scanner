@@ -29,9 +29,16 @@ class Category(models.Model):
 class Post(TimestampedModel):
     """Blog post model with abstract inheritance."""
 
+    STATUS_CHOICES = [
+        ("draft", "Draft"),
+        ("published", "Published"),
+        ("archived", "Archived"),
+    ]
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     content = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
     author = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="posts")
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="posts")
     tags = models.ManyToManyField("Tag", related_name="posts", blank=True)

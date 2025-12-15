@@ -341,3 +341,83 @@ def safe_as_string(node: nodes.NodeNG) -> str:
         return node.as_string()
     except Exception:
         return ""
+
+
+def infer_literal_value(node: nodes.NodeNG) -> Any:
+    """Safely infer a literal value from an AST node using astroid inference.
+
+    Attempts to resolve the node to a Python literal (string, number, bool, None,
+    list, tuple, dict). Falls back to string representation if inference fails
+    or returns non-literal types.
+
+    Args:
+        node: Astroid node to infer
+
+    Returns:
+        Inferred Python literal value, or string representation as fallback
+
+    Example:
+        >>> # For: choices=[("active", "Active"), ("inactive", "Inactive")]
+        >>> infer_literal_value(choices_node)
+        [["active", "Active"], ["inactive", "Inactive"]]
+
+        >>> # For: default=timezone.now (callable reference)
+        >>> infer_literal_value(default_node)
+        "timezone.now"  # fallback to string
+    """
+    try:
+        # Try to infer the value
+        inferred = list(node.infer())
+
+        # Skip if inference failed or returned multiple values
+        if not inferred or len(inferred) != 1:
+            return safe_as_string(node)
+
+        inferred_value = inferred[0]
+
+        # Handle Uninferable nodes
+        if inferred_value.__class__.__name__ in ("Uninferable", "UninferableBase"):
+            return safe_as_string(node)
+
+        # Handle Const nodes (strings, numbers, booleans, None)
+        if isinstance(inferred_value, nodes.Const):
+            return inferred_value.value
+
+        # Handle List nodes recursively
+        if isinstance(inferred_value, nodes.List):
+            result = []
+            for elem in inferred_value.elts:
+                if isinstance(elem, nodes.NodeNG):
+                    result.append(infer_literal_value(elem))
+                else:
+                    result.append(safe_as_string(node))
+            return result
+
+        # Handle Tuple nodes recursively
+        if isinstance(inferred_value, nodes.Tuple):
+            result = []
+            for elem in inferred_value.elts:
+                if isinstance(elem, nodes.NodeNG):
+                    result.append(infer_literal_value(elem))
+                else:
+                    result.append(safe_as_string(node))
+            return result
+
+        # Handle Dict nodes recursively
+        if isinstance(inferred_value, nodes.Dict):
+            result = {}
+            for key_node, value_node in zip(inferred_value.keys, inferred_value.values):
+                if isinstance(key_node, nodes.NodeNG) and isinstance(value_node, nodes.NodeNG):
+                    key = infer_literal_value(key_node)
+                    value = infer_literal_value(value_node)
+                    # Only add if key is hashable (string, number, etc.)
+                    if isinstance(key, (str, int, float, bool, type(None))):
+                        result[key] = value
+            return result
+
+        # For other types (functions, classes, etc.), fall back to string
+        return safe_as_string(node)
+
+    except Exception:
+        # On any error, fall back to string representation
+        return safe_as_string(node)

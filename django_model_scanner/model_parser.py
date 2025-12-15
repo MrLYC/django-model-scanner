@@ -8,6 +8,7 @@ from .ast_utils import (
     get_app_label_from_module,
     safe_as_string,
     is_abstract_model,
+    infer_literal_value,
 )
 
 
@@ -19,7 +20,7 @@ REL_FIELDS = {
 }
 
 
-def parse_field(assign_node: nodes.Assign) -> Tuple[str, str, List[str], Dict[str, str]]:
+def parse_field(assign_node: nodes.Assign) -> Tuple[str, str, List[str], Dict[str, Any]]:
     """Extract field information from an assignment node.
 
     Args:
@@ -31,7 +32,7 @@ def parse_field(assign_node: nodes.Assign) -> Tuple[str, str, List[str], Dict[st
     Example:
         >>> # For: name = models.CharField(max_length=100, null=False)
         >>> parse_field(node)
-        ('name', 'CharField', [], {'max_length': '100', 'null': 'False'})
+        ('name', 'CharField', [], {'max_length': 100, 'null': False})
 
         >>> # For: group = models.ForeignKey("Group", on_delete=models.CASCADE)
         >>> parse_field(node)
@@ -53,16 +54,18 @@ def parse_field(assign_node: nodes.Assign) -> Tuple[str, str, List[str], Dict[st
     # Extract positional arguments (important for ForeignKey, ManyToMany)
     args = [safe_as_string(arg) for arg in call.args]
 
-    # Extract keyword arguments
+    # Extract keyword arguments with literal value inference
     options = {}
     for kw in call.keywords:
         if kw.arg:  # Skip **kwargs
-            options[kw.arg] = safe_as_string(kw.value)
+            # Try to infer literal values (for choices, defaults, etc.)
+            inferred_value = infer_literal_value(kw.value)
+            options[kw.arg] = inferred_value
 
     return field_name, field_type, args, options
 
 
-def normalize_relation(field_type: str, args: List[str], options: Dict[str, str]) -> Optional[Dict[str, Any]]:
+def normalize_relation(field_type: str, args: List[str], options: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     """Create relationship metadata for ForeignKey, OneToOne, ManyToMany fields.
 
     Args:
@@ -187,17 +190,36 @@ def parse_model(class_node: nodes.ClassDef) -> Dict[str, Any]:
         "module": module_name,
         "abstract": is_abstract_model(class_node),
         "table": extract_table_name(class_node, app_label),
+        "bases": [],  # Direct Django Model base classes (excluding Model itself)
         "fields": {},
         "relationships": {},
-        "ancestors": [],  # For inheritance tracking
+        "ancestors": [],  # For inheritance tracking (internal use)
     }
 
-    # Track ancestor qualified names for inheritance
+    # Collect base class qualified names for inheritance tracking
+    # Also build the "bases" list for export (excluding django.db.models.Model)
     try:
         for base in class_node.bases:
-            base_qname = safe_as_string(base)
-            if base_qname:
-                model["ancestors"].append(base_qname)
+            if isinstance(base, nodes.NodeNG):
+                base_str = safe_as_string(base)
+                if base_str:
+                    model["ancestors"].append(base_str)
+
+                    # Try to infer the qualified name for the bases list
+                    try:
+                        inferred = list(base.infer())
+                        if inferred and len(inferred) == 1:
+                            inferred_base = inferred[0]
+                            if isinstance(inferred_base, nodes.ClassDef):
+                                qname = inferred_base.qname()
+                                # Exclude django.db.models.Model itself
+                                if qname != "django.db.models.base.Model":
+                                    # Include all custom base classes (they're already Django models
+                                    # if this class was detected as a Django model)
+                                    model["bases"].append(qname)
+                    except Exception:
+                        # If inference fails, still track the base string in ancestors
+                        pass
     except Exception:
         pass
 
@@ -233,6 +255,31 @@ def parse_model(class_node: nodes.ClassDef) -> Dict[str, Any]:
             continue
 
     return model
+
+
+def _is_django_model_base(base_class: nodes.ClassDef) -> bool:
+    """Check if a base class is a Django model.
+
+    Args:
+        base_class: Inferred base class node
+
+    Returns:
+        True if the base class inherits from django.db.models.Model
+    """
+    try:
+        # Check if it's the Model class itself
+        qname = base_class.qname()
+        if qname == "django.db.models.base.Model":
+            return True
+
+        # Check ancestors
+        for ancestor in base_class.ancestors():
+            if hasattr(ancestor, "qname") and ancestor.qname() == "django.db.models.base.Model":
+                return True
+    except Exception:
+        pass
+
+    return False
 
 
 def merge_abstract_fields(model: Dict[str, Any], model_map: Dict[str, Dict[str, Any]]) -> None:

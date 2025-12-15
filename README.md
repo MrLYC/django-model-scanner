@@ -166,9 +166,22 @@ pylint myapp/ \
 ### Example YAML
 
 ```yaml
+blog.models.TimestampedModel:
+  module: blog.models
+  abstract: true
+  bases: []
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+
 blog.models.Category:
   module: blog.models
   abstract: false
+  bases: []
   table: blog_categories
   fields:
     id:
@@ -184,32 +197,9 @@ blog.models.Category:
 blog.models.Post:
   module: blog.models
   abstract: false
+  bases:
+    - blog.models.TimestampedModel
   table: blog_post
-  fields:
-    title:
-      type: CharField
-      max_length: 200
-    author:
-      type: ForeignKey
-      null: false
-    created_at:
-      type: DateTimeField
-      auto_now_add: true
-  relationships:
-    author:
-      type: ForeignKey
-      to: auth.models.User
-      on_delete: CASCADE
-      related_name: posts
-    category:
-      type: ForeignKey
-      to: blog.models.Category
-      on_delete: SET_NULL
-      related_name: posts
-
-blog.models.TimestampedModel:
-  module: blog.models
-  abstract: true
   fields:
     created_at:
       type: DateTimeField
@@ -217,6 +207,32 @@ blog.models.TimestampedModel:
     updated_at:
       type: DateTimeField
       auto_now: true
+    title:
+      type: CharField
+      max_length: 200
+    status:
+      type: CharField
+      max_length: 20
+      choices:
+        - [draft, Draft]
+        - [published, Published]
+        - [archived, Archived]
+      default: draft
+    author:
+      type: ForeignKey
+      on_delete: models.CASCADE
+      related_name: posts
+  relationships:
+    author:
+      type: ForeignKey
+      to: auth.models.User
+      on_delete: models.CASCADE
+      related_name: posts
+    category:
+      type: ForeignKey
+      to: blog.models.Category
+      on_delete: models.SET_NULL
+      related_name: posts
 ```
 
 ### Schema Structure
@@ -225,9 +241,12 @@ Each model entry contains:
 
 - **module**: Python module path
 - **abstract**: Boolean indicating if model is abstract
+- **bases**: List of Django Model base classes (excluding `django.db.models.Model`)
 - **table**: Database table name (only for concrete models)
 - **fields**: Dictionary of field definitions
   - Field name → field properties (type, options)
+  - Field choices are exported as structured lists
+  - Defaults, booleans, and numbers are properly typed
 - **relationships**: Dictionary of relationship metadata (ForeignKey, ManyToMany, OneToOne)
   - Includes: `to`, `on_delete`, `related_name`, `through`, etc.
 

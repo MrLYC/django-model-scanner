@@ -4,25 +4,44 @@ from typing import Any, Dict
 import yaml
 
 
-def normalize_value(value_str: str) -> Any:
-    """Convert AST string representations to proper Python types.
+def normalize_value(value: Any) -> Any:
+    """Convert values to proper Python types for YAML export.
+
+    Handles both string representations from AST and already-inferred
+    literal values (lists, dicts, etc.).
 
     Args:
-        value_str: String representation of a value from AST
+        value: Value to normalize (string or already-inferred type)
 
     Returns:
-        Normalized Python value (bool, int, None, or string)
+        Normalized Python value (bool, int, None, string, list, dict, etc.)
 
     Example:
         >>> normalize_value("True")
         True
-        >>> normalize_value("100")
-        100
-        >>> normalize_value("None")
-        None
-        >>> normalize_value('"hello"')
-        'hello'
+        >>> normalize_value(["active", "Active"])
+        ["active", "Active"]
+        >>> normalize_value({"key": "value"})
+        {"key": "value"}
     """
+    # If already a list, recursively normalize elements
+    if isinstance(value, list):
+        return [normalize_value(item) for item in value]
+
+    # If already a dict, recursively normalize values
+    if isinstance(value, dict):
+        return {k: normalize_value(v) for k, v in value.items()}
+
+    # If already a primitive type, return as-is
+    if isinstance(value, (bool, int, float, type(None))):
+        return value
+
+    # Otherwise, treat as string and apply string normalization
+    if not isinstance(value, str):
+        return value
+
+    value_str = value
+
     # Handle boolean values
     if value_str == "True":
         return True
@@ -54,18 +73,20 @@ def normalize_value(value_str: str) -> Any:
     return value_str
 
 
-def format_field_options(options_dict: Dict[str, str]) -> Dict[str, Any]:
+def format_field_options(options_dict: Dict[str, Any]) -> Dict[str, Any]:
     """Normalize field option values for YAML output.
 
     Args:
-        options_dict: Dictionary of field options as strings
+        options_dict: Dictionary of field options (strings or inferred values)
 
     Returns:
         Dictionary with normalized values
 
     Example:
-        >>> format_field_options({'max_length': '100', 'null': 'False'})
+        >>> format_field_options({'max_length': 100, 'null': False})
         {'max_length': 100, 'null': False}
+        >>> format_field_options({'choices': [['a', 'A'], ['b', 'B']]})
+        {'choices': [['a', 'A'], ['b', 'B']]}
     """
     normalized = {}
     for key, value in options_dict.items():
@@ -98,6 +119,10 @@ def format_model_output(model_dict: Dict[str, Any]) -> Dict[str, Any]:
         "module": model_dict["module"],
         "abstract": model_dict["abstract"],
     }
+
+    # Add bases field (list of Django Model base classes)
+    if "bases" in model_dict:
+        output["bases"] = model_dict["bases"]
 
     # Only include table for concrete models
     if not model_dict["abstract"] and model_dict.get("table"):
