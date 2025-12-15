@@ -41,7 +41,7 @@ Or with development dependencies:
 pip install -e ".[dev]"
 ```
 
-After installation, the `django-scan` command will be available in your PATH.
+After installation, the `django-model-scanner` command will be available in your PATH.
 
 ## Quick Start
 
@@ -54,13 +54,13 @@ The simplest way to use the scanner:
 python -m django_model_scanner -p /path/to/project
 
 # Or use the installed command
-django-scan -p /path/to/project
+django-model-scanner -p /path/to/project
 
 # Specify custom output location
 python -m django_model_scanner -p ./myapp -o models.yaml
 
 # Scan specific models file
-django-scan -p ./blog/models.py -o blog_models.yaml
+django-model-scanner -p ./blog/models.py -o blog_models.yaml
 ```
 
 This generates a YAML file (default: `django_models.yaml`) with all discovered models.
@@ -95,7 +95,7 @@ This generates `django_models.yaml` with all discovered models.
 ```bash
 python -m django_model_scanner [OPTIONS]
 # or
-django-scan [OPTIONS]
+django-model-scanner [OPTIONS]
 ```
 
 **Options:**
@@ -108,22 +108,22 @@ django-scan [OPTIONS]
 
 ```bash
 # Basic usage with default output
-django-scan -p /path/to/project
+django-model-scanner -p /path/to/project
 
 # Custom output location
-django-scan -p ./src -o output/models.yaml
+django-model-scanner -p ./src -o output/models.yaml
 
 # Scan specific app
-django-scan -p ./blog -o blog_models.yaml
+django-model-scanner -p ./blog -o blog_models.yaml
 
 # Scan single models file
-django-scan -p ./myapp/models.py -o myapp.yaml
+django-model-scanner -p ./myapp/models.py -o myapp.yaml
 
 # Show help
-django-scan --help
+django-model-scanner --help
 
 # Show version
-django-scan --version
+django-model-scanner --version
 ```
 
 ## Advanced Usage (Pylint Integration)

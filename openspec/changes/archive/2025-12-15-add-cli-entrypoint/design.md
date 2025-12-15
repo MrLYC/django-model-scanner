@@ -78,7 +78,7 @@ Run([
 
 ### 5. Script Entry Point
 
-**Decision**: Add optional console script entry point `django-scan`
+**Decision**: Add optional console script entry point `django-model-scanner`
 
 **Rationale**:
 - More convenient than `python -m django_model_scanner`
@@ -88,7 +88,7 @@ Run([
 **Configuration** (in pyproject.toml):
 ```toml
 [project.scripts]
-django-scan = "django_model_scanner.main:main"
+django-model-scanner = "django_model_scanner.main:main"
 ```
 
 ## Module Structure
@@ -134,7 +134,7 @@ python -m django_model_scanner -p /path/to/project
 python -m django_model_scanner -p ./src -o models.yaml
 
 # With script entry point (after install)
-django-scan -p src -o output/models.yaml
+django-model-scanner -p src -o output/models.yaml
 
 # Help
 python -m django_model_scanner --help
@@ -146,4 +146,4 @@ python -m django_model_scanner --help
 2. **Integration tests**: Test with sample Django project
 3. **Error tests**: Test all error scenarios (missing paths, permission issues)
 4. **Subprocess tests**: Verify `python -m django_model_scanner` works
-5. **Entry point tests**: Verify `django-scan` works after installation
+5. **Entry point tests**: Verify `django-model-scanner` works after installation

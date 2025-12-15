@@ -45,7 +45,7 @@ python -m pylint /Users/user/project/src --disable=all --load-plugins=django_mod
 ```bash
 python -m django_model_scanner -p /Users/user/project/src -o /tmp/models.yaml
 # or even simpler:
-django-scan -p src -o models.yaml  # if installed with script entry point
+django-model-scanner -p src -o models.yaml  # if installed with script entry point
 ```
 
 ## Implementation Notes

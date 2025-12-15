@@ -83,16 +83,16 @@ The package should provide a console script entry point for convenient invocatio
 
 #### Scenario: Script invocation (after pip install)
 ```bash
-django-scan -p ./src -o models.yaml
+django-model-scanner -p ./src -o models.yaml
 ```
 **Expected**: Same behavior as `python -m django_model_scanner -p ./src -o models.yaml`
 
 #### Scenario: Script in PATH
 ```bash
-which django-scan
-# /path/to/venv/bin/django-scan
+which django-model-scanner
+# /path/to/venv/bin/django-model-scanner
 
-django-scan --help
+django-model-scanner --help
 ```
 **Expected**: Script is available in PATH and displays help
 

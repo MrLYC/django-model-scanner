@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [project.scripts]
-django-scan = "main:main"
+django-model-scanner = "django_model_scanner.main:main"
 
 [project.optional-dependencies]
 dev = [

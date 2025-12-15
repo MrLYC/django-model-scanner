@@ -48,9 +48,9 @@
 ## 5. Console Script Entry Point
 
 - [x] 5.1 Update `pyproject.toml` to add `[project.scripts]` section
-- [x] 5.2 Add entry point: `django-scan = "django_model_scanner.main:main"`
+- [x] 5.2 Add entry point: `django-model-scanner = "django_model_scanner.main:main"`
 - [x] 5.3 Test installation with `pip install -e .`
-- [x] 5.4 Verify `django-scan` command works after install
+- [x] 5.4 Verify `django-model-scanner` command works after install
 
 ## 6. __main__.py for Module Invocation
 
@@ -75,10 +75,10 @@
 - [x] 8.1 Update README.md with CLI usage section
   - Add "CLI Usage" section before "Usage with Pylint"
   - Include examples with `-p` and `-o` arguments
-  - Show both `python -m` and `django-scan` invocations
+  - Show both `python -m` and `django-model-scanner` invocations
 - [x] 8.2 Update README.md installation section
   - Mention console script installation
-  - Add note about `django-scan` command availability
+  - Add note about `django-model-scanner` command availability
 - [x] 8.3 Update SETUP.md with CLI quick start examples
 - [x] 8.4 Add CLI examples to quickstart.sh
 
@@ -124,7 +124,7 @@
 
 - [x] All tests pass
 - [x] `python -m django_model_scanner -p examples/blog -o test.yaml` works
-- [x] `django-scan -p examples/blog` works (after install)
+- [x] `django-model-scanner -p examples/blog` works (after install)
 - [x] `python -m django_model_scanner --help` shows clear usage
 - [x] Error messages are clear and actionable
 - [x] Exit codes are appropriate (0 for success, non-zero for errors)
