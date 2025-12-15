@@ -1,0 +1,3568 @@
+src.kingeye.kbm.kbm.models.config_manage.clean_rule.CleanRuleDatasource:
+  module: src.kingeye.kbm.kbm.models.config_manage.clean_rule
+  abstract: false
+  table: src_cleanruledatasource
+  fields:
+    clean_rule:
+      type: ForeignKey
+      on_delete: models.CASCADE
+      related_name: datasource
+    bk_biz_id:
+      type: IntegerField
+      'null': true
+    bk_biz_name:
+      type: CharField
+      max_length: 128
+      blank: true
+      'null': true
+    log_theme_id:
+      type: IntegerField
+    log_theme_name:
+      type: CharField
+      max_length: 128
+      blank: true
+      'null': true
+    collect_config_id:
+      type: IntegerField
+    collect_config_name:
+      type: CharField
+      max_length: 128
+      blank: true
+      'null': true
+    bk_data_id:
+      type: IntegerField
+    data_link_id:
+      type: IntegerField
+      'null': true
+      default: 0
+    transform_id:
+      type: CharField
+      max_length: 128
+      blank: true
+      'null': true
+      default: ''
+  relationships:
+    clean_rule:
+      type: ForeignKey
+      to: src.models.CleanRule
+      on_delete: models.CASCADE
+      related_name: datasource
+src.kingeye.kbm.kbm.models.config_manage.clean_rule.CleanRuleMappingRuleRelation:
+  module: src.kingeye.kbm.kbm.models.config_manage.clean_rule
+  abstract: false
+  table: src_cleanrulemappingrulerelation
+  fields:
+    clean_rule_id:
+      type: IntegerField
+      db_index: true
+    mapping_rule_id:
+      type: IntegerField
+      db_index: true
+src.kingeye.kac.alarm_execute.models.DispatchUpgradeRecord:
+  module: src.kingeye.kac.alarm_execute.models
+  abstract: false
+  table: src_dispatchupgraderecord
+  fields:
+    alarm_execute:
+      type: ForeignKey
+      verbose_name: gettext('告警处理')
+      related_name: dispatchupgraderecords
+      on_delete: models.CASCADE
+    alarm_id:
+      type: CharField
+      max_length: 64
+      db_index: true
+    current_dispatch_level:
+      type: SmallIntegerField
+      default: 0
+    dispatch_upgrade_time:
+      type: DateTimeField
+      db_index: true
+  relationships:
+    alarm_execute:
+      type: ForeignKey
+      to: src.models.AlarmExecute
+      on_delete: models.CASCADE
+      related_name: dispatchupgraderecords
+src.kingeye.kac.alarm_dispatch.models.DispatchUpgradeRecord:
+  module: src.kingeye.kac.alarm_dispatch.models
+  abstract: false
+  table: src_dispatchupgraderecord
+  fields:
+    alarm_dispatch:
+      type: ForeignKey
+      verbose_name: gettext('告警分派')
+      related_name: dispatchupgraderecords
+      on_delete: models.DO_NOTHING
+    alarm_id:
+      type: CharField
+      max_length: 64
+      db_index: true
+    current_dispatch_level:
+      type: SmallIntegerField
+      default: 0
+    dispatch_upgrade_time:
+      type: DateTimeField
+      db_index: true
+  relationships:
+    alarm_dispatch:
+      type: ForeignKey
+      to: src.models.AlarmDispatch
+      on_delete: models.DO_NOTHING
+      related_name: dispatchupgraderecords
+src.kingeye.kac.common.common_models.TimeInfo:
+  module: src.kingeye.kac.common.common_models
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+src.kingeye.kac.common.common_models.MaintainerInfo:
+  module: src.kingeye.kac.common.common_models
+  abstract: true
+  fields:
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+src.kingeye.kac.common.common_models.BasePluginModel:
+  module: src.kingeye.kac.common.common_models
+  abstract: true
+  fields:
+    name:
+      type: CharField
+      max_length: 100
+      unique: true
+    adapter_path:
+      type: CharField
+      max_length: 30
+      default: ''
+      unique: true
+    source:
+      type: CharField
+      max_length: 10
+      default: CUSTOM
+      choices: SOURCE_CHOICES
+src.kingeye.kac.common.common_models.BasePolicy:
+  module: src.kingeye.kac.common.common_models
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    id:
+      type: CharField
+      max_length: 80
+      default: gen_id_by_uuid
+      primary_key: true
+    name:
+      type: CharField
+      max_length: 100
+    is_enable:
+      type: BooleanField
+    policy:
+      type: JSONField
+      default: dict
+      encoder: MyJsonEncoder
+    alarm_object_type:
+      type: CharField
+      'null': true
+      default: null
+      max_length: 5
+      blank: true
+    alarm_object_instances:
+      type: JSONField
+      default: dict
+      encoder: MyJsonEncoder
+    space_code:
+      type: CharField
+      max_length: 128
+      default: ''
+src.kingeye.kac.alarm.models.UserAlarm:
+  module: src.kingeye.kac.alarm.models
+  abstract: false
+  table: src_useralarm
+  fields:
+    system_user:
+      type: ForeignKey
+      verbose_name: gettext('系统用户')
+      on_delete: models.CASCADE
+    alarm_id:
+      type: CharField
+      max_length: 64
+      db_index: true
+    created_time:
+      type: DateTimeField
+      default: timezone.now
+      db_index: true
+    response_time:
+      type: DateTimeField
+      'null': true
+    close_time:
+      type: DateTimeField
+      'null': true
+    create_reason:
+      type: CharField
+      max_length: 15
+      choices: CREATE_REASON_CHOICES
+    response_minutes:
+      type: IntegerField
+      blank: true
+      'null': true
+    close_minutes:
+      type: IntegerField
+      blank: true
+      'null': true
+    bk_biz_id:
+      type: IntegerField
+      blank: true
+      'null': true
+  relationships:
+    system_user:
+      type: ForeignKey
+      to: system_mgmt.models.SystemUser
+      on_delete: models.CASCADE
+src.kingeye.kac.alarm.models.AlarmQueryTemplate:
+  module: src.kingeye.kac.alarm.models
+  abstract: false
+  table: src_alarmquerytemplate
+  fields:
+    name:
+      type: CharField
+      verbose_name: gettext('模板名')
+      max_length: 100
+    value:
+      type: TextField
+      verbose_name: gettext('值')
+    bk_username:
+      type: CharField
+      verbose_name: gettext('用户名')
+      max_length: 50
+      db_index: true
+    alarm_scope:
+      type: CharField
+      max_length: 20
+      choices: ALARM_SCOPE
+      'null': true
+      default: effective
+src.kingeye.kac.alarm.models.AlarmViewPinQueryTemplate:
+  module: src.kingeye.kac.alarm.models
+  abstract: false
+  table: src_alarmviewpinquerytemplate
+  fields:
+    pin_sort:
+      type: IntegerField
+      default: 0
+    alarm_query_template:
+      type: ForeignKey
+      on_delete: models.CASCADE
+    alarm_view:
+      type: ForeignKey
+      on_delete: models.CASCADE
+      'null': true
+    alarm_scope:
+      type: CharField
+      max_length: 20
+      choices: ALARM_SCOPE
+    bk_username:
+      type: CharField
+      max_length: 50
+  relationships:
+    alarm_query_template:
+      type: ForeignKey
+      to: src.models.AlarmQueryTemplate
+      on_delete: models.CASCADE
+    alarm_view:
+      type: ForeignKey
+      to: src.models.AlarmView
+      on_delete: models.CASCADE
+src.kingeye.kac.alarm.models.AlarmDisplayFields:
+  module: src.kingeye.kac.alarm.models
+  abstract: false
+  table: src_alarmdisplayfields
+  fields:
+    bk_username:
+      type: CharField
+      max_length: 50
+    scope:
+      type: CharField
+      max_length: 50
+      choices: ALARM_SCOPE_CHOICES
+    fields:
+      type: JSONField
+      default: dict
+      encoder: MyJsonEncoder
+    field_width:
+      type: JSONField
+      default: dict
+      encoder: MyJsonEncoder
+src.kingeye.kac.alarm.models.AlarmUserNotifyType:
+  module: src.kingeye.kac.alarm.models
+  abstract: false
+  table: src_alarmusernotifytype
+  fields:
+    alarm_id:
+      type: CharField
+      max_length: 64
+      db_index: true
+    system_user:
+      type: ForeignKey
+      verbose_name: gettext('系统用户')
+      on_delete: models.CASCADE
+    type:
+      type: CharField
+      max_length: 50
+  relationships:
+    system_user:
+      type: ForeignKey
+      to: system_mgmt.models.SystemUser
+      on_delete: models.CASCADE
+src.kingeye.kac.alarm.models.AlarmRobotNotifyType:
+  module: src.kingeye.kac.alarm.models
+  abstract: false
+  table: src_alarmrobotnotifytype
+  fields:
+    alarm_id:
+      type: CharField
+      max_length: 64
+      db_index: true
+    robot:
+      type: ForeignKey
+      verbose_name: gettext('通知机器人')
+      on_delete: models.CASCADE
+    at_data:
+      type: JSONField
+      default: dict
+  relationships:
+    robot:
+      type: ForeignKey
+      to: system_mgmt.models.Robot
+      on_delete: models.CASCADE
+src.kingeye.kac.performance.models.PerformanceLog:
+  module: src.kingeye.kac.performance.models
+  abstract: false
+  table: src_performancelog
+  fields:
+    process_id:
+      type: CharField
+      verbose_name: gettext('进程id')
+      default: 0
+      max_length: 50
+      'null': true
+    process_name:
+      type: CharField
+      verbose_name: gettext('进程名称')
+      default: ''
+      max_length: 50
+      'null': true
+    cpu_usage:
+      type: CharField
+      verbose_name: gettext('CPU使用率')
+      default: 0
+      max_length: 50
+      'null': true
+    memory_usage_percent:
+      type: CharField
+      verbose_name: gettext('内存使用率(百分比）')
+      max_length: 50
+      default: 0
+      'null': true
+    memory_usage:
+      type: CharField
+      verbose_name: gettext('内存使用率（数值）')
+      default: 0
+      max_length: 50
+      'null': true
+    cmd:
+      type: CharField
+      verbose_name: gettext('运行命令')
+      default: ''
+      max_length: 2048
+      'null': true
+    created_at:
+      type: DateTimeField
+      verbose_name: gettext('记录时间')
+      auto_now_add: true
+src.kingeye.kac.alarm_collect.models.AlarmFieldMap:
+  module: src.kingeye.kac.alarm_collect.models
+  abstract: false
+  table: src_alarmfieldmap
+  fields:
+    alarm_source:
+      type: ForeignKey
+      verbose_name: gettext('告警源')
+      related_name: fieldmaps
+      on_delete: models.CASCADE
+    alarm_field:
+      type: CharField
+      max_length: 20
+    map_field:
+      type: CharField
+      max_length: 30
+    extract_config:
+      type: JSONField
+      default: dict
+      encoder: MyJsonEncoder
+    desc:
+      type: CharField
+      max_length: 50
+    created_time:
+      type: DateTimeField
+      auto_now_add: true
+    modified_time:
+      type: DateTimeField
+      auto_now: true
+  relationships:
+    alarm_source:
+      type: ForeignKey
+      to: src.models.AlarmSource
+      on_delete: models.CASCADE
+      related_name: fieldmaps
+src.kingeye.kac.alarm_collect.models.AlarmType:
+  module: src.kingeye.kac.alarm_collect.models
+  abstract: false
+  table: src_alarmtype
+  fields:
+    alarm_source:
+      type: ForeignKey
+      verbose_name: gettext('告警源')
+      related_name: types
+      on_delete: models.CASCADE
+    name:
+      type: CharField
+      max_length: 100
+    sort:
+      type: CharField
+      max_length: 30
+      default: ''
+    match_patten:
+      type: CharField
+      max_length: 50
+    match_mode:
+      type: CharField
+      max_length: 40
+      choices: MATCH_MODE_CHOICES
+    created_time:
+      type: DateTimeField
+      auto_now_add: true
+    modified_time:
+      type: DateTimeField
+      auto_now: true
+  relationships:
+    alarm_source:
+      type: ForeignKey
+      to: src.models.AlarmSource
+      on_delete: models.CASCADE
+      related_name: types
+src.kingeye.kac.alarm_collect.models.AlarmSourceConfigs:
+  module: src.kingeye.kac.alarm_collect.models
+  abstract: false
+  table: src_alarmsourceconfigs
+  fields:
+    alarm_source:
+      type: ForeignKey
+      verbose_name: gettext('告警源')
+      related_name: configs
+      on_delete: models.CASCADE
+    key:
+      type: CharField
+      max_length: 64
+    name:
+      type: CharField
+      max_length: 128
+    value:
+      type: CharField
+      max_length: 255
+      default: ''
+    desc:
+      type: CharField
+      max_length: 255
+      default: ''
+    need_encrypt:
+      type: BooleanField
+      default: false
+  relationships:
+    alarm_source:
+      type: ForeignKey
+      to: src.models.AlarmSource
+      on_delete: models.CASCADE
+      related_name: configs
+src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models.BaseModel:
+  module: src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models.MonitorTemplate:
+  module: src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models
+  abstract: false
+  table: home_application_monitortemplate
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+    template_id:
+      type: CharField
+      verbose_name: _('模板ID')
+      max_length: 64
+      default: ''
+    name:
+      type: CharField
+      verbose_name: _('模板名')
+      max_length: 64
+    type:
+      type: CharField
+      choices: TYPE_CHOICES
+      max_length: 30
+      verbose_name: _('目标类型')
+      'null': true
+      blank: true
+    config_type:
+      type: CharField
+      choices: CONFIG_TYPE_CHOICES
+      max_length: 30
+      verbose_name: _('配置类型')
+      default: TARGET
+    object_model_code:
+      type: CharField
+      max_length: 255
+      default: ''
+    alarm_interval:
+      type: IntegerField
+      verbose_name: _('通知间隔(分钟)')
+      default: 60 * 24 * 60
+    ip_field:
+      type: CharField
+      verbose_name: _('CMDB模型ip字段')
+      max_length: 64
+      'null': true
+      blank: true
+    enabled_recovery_notice:
+      type: BooleanField
+      verbose_name: 恢复通知
+      default: true
+    monitor_obj:
+      type: IntegerField
+      default: 0
+      'null': true
+      blank: true
+    strategy_type:
+      type: CharField
+      verbose_name: _('策略类型')
+      max_length: 32
+      default: unknown
+      choices: STRATEGY_TYPE
+src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models.MonitorTemplateRelateInst:
+  module: src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models
+  abstract: false
+  table: home_application_monitortemplaterelateinst
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+    monitor_template:
+      type: ForeignKey
+      on_delete: models.CASCADE
+    instance_name:
+      type: CharField
+      max_length: 128
+      default: ''
+      verbose_name: _('实例名称')
+    bk_inst_id:
+      type: IntegerField
+      verbose_name: _('实例ID')
+      'null': true
+    k8s_inst_id:
+      type: CharField
+      verbose_name: _('容器实例ID')
+      max_length: 128
+      'null': true
+    group_id:
+      type: IntegerField
+      verbose_name: _('组ID')
+      'null': true
+    enabled_state:
+      type: BooleanField
+      default: true
+    strategy_state:
+      type: BooleanField
+      default: true
+  relationships:
+    monitor_template:
+      type: ForeignKey
+      to: src.models.MonitorTemplate
+      on_delete: models.CASCADE
+src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models.StrategyConfigRelateInst:
+  module: src.kingeye.kingeye_kit.module_sdk.kmc.kmc_models.models
+  abstract: false
+  table: home_application_strategyconfigrelateinst
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+    template_inst:
+      type: ForeignKey
+      on_delete: models.CASCADE
+      'null': true
+    bk_inst_id:
+      type: IntegerField
+      'null': true
+    k8s_inst_id:
+      type: CharField
+      verbose_name: _('容器实例ID')
+      max_length: 128
+      'null': true
+    bk_strategy_id:
+      type: IntegerField
+      'null': true
+      verbose_name: _('蓝鲸策略ID')
+    bk_biz_id:
+      type: IntegerField
+      'null': true
+    is_enabled:
+      type: BooleanField
+      verbose_name: _('启停状态')
+      default: true
+  relationships:
+    template_inst:
+      type: ForeignKey
+      to: src.models.MonitorTemplateRelateInst
+      on_delete: models.CASCADE
+src.kingeye.kingeye_kit.django.orm.base_model.OperateRecordModel:
+  module: src.kingeye.kingeye_kit.django.orm.base_model
+  abstract: true
+  fields:
+    created_at:
+      type: BigIntegerField
+      blank: true
+      'null': true
+    created_by:
+      type: CharField
+      max_length: 320
+      default: ''
+    updated_at:
+      type: BigIntegerField
+      blank: true
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 320
+      blank: true
+      default: ''
+src.kingeye.kingeye_kit.django.orm.base_model.SoftDeleteModel:
+  module: src.kingeye.kingeye_kit.django.orm.base_model
+  abstract: true
+  fields:
+    created_at:
+      type: BigIntegerField
+      blank: true
+      'null': true
+    created_by:
+      type: CharField
+      max_length: 320
+      default: ''
+    updated_at:
+      type: BigIntegerField
+      blank: true
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 320
+      blank: true
+      default: ''
+    is_deleted:
+      type: BooleanField
+      default: false
+    deleted_at:
+      type: BigIntegerField
+      blank: true
+      'null': true
+    deleted_by:
+      type: CharField
+      max_length: 320
+      blank: true
+      'null': true
+src.kingeye.kapm.apm.model.service_model.Service:
+  module: src.kingeye.kapm.apm.model.service_model
+  abstract: false
+  table: src_service
+  fields:
+    service_id:
+      type: AutoField
+      primary_key: true
+    service_name:
+      type: CharField
+      max_length: 50
+    service_alias:
+      type: CharField
+      max_length: 128
+      default: ''
+    namespace:
+      type: CharField
+      max_length: 50
+    namespace_id:
+      type: IntegerField
+    instance_nums:
+      type: IntegerField
+    apdex_t:
+      type: IntegerField
+    edited:
+      type: BooleanField
+      default: DefaultConfig.EDITED
+    weight:
+      type: IntegerField
+      default: DefaultConfig.WEIGHT
+src.kingeye.kapm.apm.model.component_model.NamespaceComponentRelation:
+  module: src.kingeye.kapm.apm.model.component_model
+  abstract: false
+  table: apm_namespace_component_relation
+  fields:
+    namespace_id:
+      type: IntegerField
+      db_index: true
+    component_id:
+      type: IntegerField
+      db_index: true
+    updated_at:
+      type: BigIntegerField
+      blank: true
+      'null': true
+src.kingeye.kapm.apm.model.component_model.ServiceComponentRelation:
+  module: src.kingeye.kapm.apm.model.component_model
+  abstract: false
+  table: apm_service_component_relation
+  fields:
+    service_name:
+      type: CharField
+      max_length: 64
+    namespace:
+      type: CharField
+      max_length: 64
+    namespace_id:
+      type: IntegerField
+    component_id:
+      type: IntegerField
+      db_index: true
+    updated_at:
+      type: BigIntegerField
+      blank: true
+      'null': true
+src.kingeye.kapm.tests.utils.test_model_utils.test_get_model_fields_normal_case.TestModel:
+  module: src.kingeye.kapm.tests.utils.test_model_utils
+  abstract: false
+  table: src_testmodel
+  fields:
+    field1:
+      type: CharField
+      max_length: 100
+    field2:
+      type: IntegerField
+src.kingeye.kapm.tests.utils.test_model_utils.test_get_model_fields_empty_model.EmptyModel:
+  module: src.kingeye.kapm.tests.utils.test_model_utils
+  abstract: false
+  table: src_emptymodel
+src.kingeye.kapm.tests.utils.test_model_utils.test_extract_model_fields_normal_case.TestModel:
+  module: src.kingeye.kapm.tests.utils.test_model_utils
+  abstract: false
+  table: src_testmodel
+  fields:
+    field1:
+      type: CharField
+      max_length: 100
+    field2:
+      type: IntegerField
+src.kingeye.kapm.tests.utils.test_model_utils.test_extract_model_fields_empty_case.TestModel:
+  module: src.kingeye.kapm.tests.utils.test_model_utils
+  abstract: false
+  table: src_testmodel
+  fields:
+    field1:
+      type: CharField
+      max_length: 100
+    field2:
+      type: IntegerField
+src.kingeye.meta.legacy.sys_setting.models.sys_setting.SysSetting:
+  module: src.kingeye.meta.legacy.sys_setting.models.sys_setting
+  abstract: false
+  table: sys_setting
+  fields:
+    key:
+      type: CharField
+      verbose_name: _('设置项')
+      max_length: 64
+      unique: true
+    value:
+      type: TextField
+      verbose_name: _('设置值')
+    desc:
+      type: TextField
+      verbose_name: _('设置描述')
+      default: ''
+src.kingeye.meta.legacy.dynamic_group.models.dynamic_group_member_model.DynamicGroupMember:
+  module: src.kingeye.meta.legacy.dynamic_group.models.dynamic_group_member_model
+  abstract: false
+  table: dynamic_group_member
+  fields:
+    dynamic_group_id:
+      type: IntegerField
+    member:
+      type: JSONField
+src.kingeye.meta.legacy.calendar.models.CalendarModel:
+  module: src.kingeye.meta.legacy.calendar.models
+  abstract: false
+  table: calendar
+  fields:
+    name:
+      type: CharField
+      max_length: 15
+    classify:
+      type: CharField
+      choices: CALENDAR_CLASSIFY_CHOICES
+      max_length: 12
+    monitor_calendar_id:
+      type: IntegerField
+      'null': true
+      blank: true
+    create_user:
+      type: CharField
+      max_length: 32
+      default: ''
+      blank: true
+    create_time:
+      type: IntegerField
+      blank: true
+      'null': true
+    update_user:
+      type: CharField
+      max_length: 32
+      default: ''
+      blank: true
+    update_time:
+      type: IntegerField
+      blank: true
+      'null': true
+src.kingeye.meta.legacy.calendar.models.CalendarItemModel:
+  module: src.kingeye.meta.legacy.calendar.models
+  abstract: false
+  table: calendar_item
+  fields:
+    name:
+      type: CharField
+      max_length: 15
+    calendar_id:
+      type: IntegerField
+    start_time:
+      type: IntegerField
+    end_time:
+      type: IntegerField
+    time_zone:
+      type: CharField
+      default: Asia/Shanghai
+      max_length: 35
+    monitor_item_id:
+      type: IntegerField
+      'null': true
+      blank: true
+    create_user:
+      type: CharField
+      max_length: 32
+      default: ''
+      blank: true
+    create_time:
+      type: IntegerField
+      blank: true
+      'null': true
+    update_user:
+      type: CharField
+      max_length: 32
+      default: ''
+      blank: true
+    update_time:
+      type: IntegerField
+      blank: true
+      'null': true
+src.kingeye.meta.legacy.cmdb_object_instance.models.cmdb_node_instance_model.CmdbNodeInstance:
+  module: src.kingeye.meta.legacy.cmdb_object_instance.models.cmdb_node_instance_model
+  abstract: false
+  table: src_cmdbnodeinstance
+  fields:
+    instance_id:
+      type: AutoField
+      primary_key: true
+    bk_biz_id:
+      type: IntegerField
+    bk_inst_id:
+      type: IntegerField
+    bk_obj_id:
+      type: CharField
+      max_length: 266
+src.kingeye.meta.legacy.cmdb_object_instance.models.cmdb_host_instance_model.CmdbHostInstance:
+  module: src.kingeye.meta.legacy.cmdb_object_instance.models.cmdb_host_instance_model
+  abstract: false
+  table: src_cmdbhostinstance
+  fields:
+    instance_id:
+      type: IntegerField
+    bk_cloud_id:
+      type: IntegerField
+    bk_host_id:
+      type: IntegerField
+    bk_host_innerip:
+      type: CharField
+      max_length: 255
+src.kingeye.meta.legacy.common.models.base_model.BaseModel:
+  module: src.kingeye.meta.legacy.common.models.base_model
+  abstract: true
+  fields:
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+src.kingeye.meta.legacy.common.models.base_model.SoftDeleteBaseModel:
+  module: src.kingeye.meta.legacy.common.models.base_model
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+src.kingeye.meta.legacy.common.models.base_model.TimeInfoMixin:
+  module: src.kingeye.meta.legacy.common.models.base_model
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+src.kingeye.meta.legacy.common.models.base_model.MaintainerInfoMixin:
+  module: src.kingeye.meta.legacy.common.models.base_model
+  abstract: true
+  fields:
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+src.kingeye.meta.legacy.sm2_encryption.models.settings_medol.Settings:
+  module: src.kingeye.meta.legacy.sm2_encryption.models.settings_medol
+  abstract: false
+  table: src_settings
+  fields:
+    key:
+      type: CharField
+      primary_key: true
+      max_length: 32
+    value:
+      type: CharField
+      max_length: 128
+    description:
+      type: CharField
+      max_length: 100
+      'null': true
+src.kingeye.meta.legacy.kafka.models.kafka_cluster_instance_model.KafkaClusterInstance:
+  module: src.kingeye.meta.legacy.kafka.models.kafka_cluster_instance_model
+  abstract: false
+  table: src_kafkaclusterinstance
+  fields:
+    instance_id:
+      type: AutoField
+      primary_key: true
+    cluster_id:
+      type: IntegerField
+    instance_address:
+      type: CharField
+      max_length: 255
+    instance_port:
+      type: IntegerField
+src.kingeye.meta.legacy.elasticsearch.models.es_cluster_business_model.ESClusterBusiness:
+  module: src.kingeye.meta.legacy.elasticsearch.models.es_cluster_business_model
+  abstract: false
+  table: src_esclusterbusiness
+  fields:
+    es_cluster_id:
+      type: IntegerField
+    bk_biz_id:
+      type: IntegerField
+src.kingeye.meta.legacy.elasticsearch.models.es_cluster_custom_option_model.ESClusterCustomOption:
+  module: src.kingeye.meta.legacy.elasticsearch.models.es_cluster_custom_option_model
+  abstract: false
+  table: src_esclustercustomoption
+  fields:
+    es_cluster_id:
+      type: IntegerField
+    number_of_replicas_max:
+      type: IntegerField
+    number_of_replicas_default:
+      type: IntegerField
+    es_shards_default:
+      type: IntegerField
+    es_shards_max:
+      type: IntegerField
+src.kingeye.meta.legacy.elasticsearch.models.es_cluster_instance_model.ESClusterInstance:
+  module: src.kingeye.meta.legacy.elasticsearch.models.es_cluster_instance_model
+  abstract: false
+  table: src_esclusterinstance
+  fields:
+    instance_id:
+      type: AutoField
+      primary_key: true
+    es_cluster_id:
+      type: IntegerField
+    es_instance_address:
+      type: CharField
+      max_length: 255
+    es_instance_port:
+      type: IntegerField
+src.kingeye.klc.collector.models.collect_desensitization_config_model.CollectDesensitizationConfig:
+  module: src.kingeye.klc.collector.models.collect_desensitization_config_model
+  abstract: false
+  table: src_collectdesensitizationconfig
+  fields:
+    desensitization_id:
+      type: AutoField
+      primary_key: true
+    log_theme_id:
+      type: IntegerField
+    collect_config_id:
+      type: IntegerField
+    desensitization_field:
+      type: CharField
+      max_length: 32
+src.kingeye.klc.rd_es_config.models.rd_es_config_indices_model.RdEsConfigIndices:
+  module: src.kingeye.klc.rd_es_config.models.rd_es_config_indices_model
+  abstract: false
+  table: src_rdesconfigindices
+  fields:
+    rd_es_config_id:
+      type: IntegerField
+      primary_key: true
+    es_index:
+      type: TextField
+src.kingeye.klc.rd_es_config.models.rd_es_config_instance_target_info_model.RdEsConfigInstanceTargetInfo:
+  module: src.kingeye.klc.rd_es_config.models.rd_es_config_instance_target_info_model
+  abstract: false
+  table: src_rdesconfiginstancetargetinfo
+  fields:
+    rd_es_config_id:
+      type: IntegerField
+    log_theme_id:
+      type: IntegerField
+      'null': true
+    ip:
+      type: CharField
+      max_length: 32
+    bk_cloud_id:
+      type: IntegerField
+src.kingeye.klc.rd_es_config.models.rd_es_config_target_info_model.RdEsConfigTargetInfo:
+  module: src.kingeye.klc.rd_es_config.models.rd_es_config_target_info_model
+  abstract: false
+  table: src_rdesconfigtargetinfo
+  fields:
+    rd_es_config_id:
+      type: IntegerField
+    log_theme_id:
+      type: IntegerField
+      'null': true
+    bk_inst_id:
+      type: IntegerField
+    bk_obj_id:
+      type: CharField
+      max_length: 32
+src.kingeye.kingeye_audit.models.audit.AuditLog:
+  module: src.kingeye.kingeye_audit.models.audit
+  abstract: false
+  table: audit_log
+  fields:
+    audit_log_id:
+      type: BigAutoField
+      primary_key: true
+      verbose_name: 审计日志ID
+    operate_time:
+      type: BigIntegerField
+      verbose_name: 时间戳，UTC，精确到毫秒
+      db_index: true
+    audit_log_time:
+      type: BigIntegerField
+      verbose_name: 时间戳，UTC，精确到毫秒
+    operator:
+      type: CharField
+      max_length: 150
+      verbose_name: 操作者，使用username字段
+      db_index: true
+    service_code:
+      type: CharField
+      max_length: 45
+      verbose_name: 服务编码
+    service_name:
+      type: CharField
+      max_length: 45
+      verbose_name: 服务名称
+    resource_type:
+      type: CharField
+      max_length: 50
+      verbose_name: 冗余字段，第一个资源类型
+      'null': true
+      blank: true
+    resource_id:
+      type: CharField
+      max_length: 50
+      verbose_name: 冗余字段，第一个资源ID
+      'null': true
+      blank: true
+    resource_name:
+      type: CharField
+      max_length: 200
+      verbose_name: 冗余字段，第一个资源名称
+      'null': true
+      blank: true
+    resource_count:
+      type: IntegerField
+      verbose_name: 冗余字段，资源数量
+    operation_code:
+      type: CharField
+      max_length: 128
+      verbose_name: 操作编码
+    operation_name:
+      type: CharField
+      max_length: 128
+      verbose_name: 操作名称
+    description:
+      type: CharField
+      max_length: 2000
+      verbose_name: 审计日志描述
+      'null': true
+      blank: true
+    request_id:
+      type: CharField
+      max_length: 128
+      verbose_name: 请求ID
+      'null': true
+      blank: true
+    module:
+      type: CharField
+      max_length: 45
+      blank: true
+      'null': true
+      verbose_name: 模块
+    scenario:
+      type: CharField
+      max_length: 45
+      blank: true
+      'null': true
+      verbose_name: 场景
+src.kingeye.kingeye_audit.models.audit.AuditLogParams:
+  module: src.kingeye.kingeye_audit.models.audit
+  abstract: false
+  table: audit_log_params
+  fields:
+    audit_log_id:
+      type: BigAutoField
+      primary_key: true
+      verbose_name: 审计日志ID
+    request_param:
+      type: TextField
+      'null': true
+      blank: true
+      verbose_name: 请求参数
+    response_data:
+      type: TextField
+      'null': true
+      blank: true
+      verbose_name: 返回值数据
+    additional_param:
+      type: TextField
+      'null': true
+      blank: true
+      verbose_name: 附加参数
+src.kingeye.kingeye_audit.models.audit.AuditLogResource:
+  module: src.kingeye.kingeye_audit.models.audit
+  abstract: false
+  table: audit_log_resource
+  fields:
+    audit_log_id:
+      type: BigIntegerField
+      verbose_name: 审计日志ID
+    resource_type:
+      type: CharField
+      max_length: 50
+      'null': true
+      blank: true
+      verbose_name: 资源类型
+    resource_id:
+      type: CharField
+      max_length: 50
+      'null': true
+      blank: true
+      verbose_name: 资源ID
+    resource_name:
+      type: CharField
+      max_length: 200
+      'null': true
+      blank: true
+      verbose_name: 资源名称
+src.kingeye.kingeye_audit.models.audit.KingeyeKitId:
+  module: src.kingeye.kingeye_audit.models.audit
+  abstract: false
+  table: kingeye_kit_id
+  fields:
+    type:
+      type: CharField
+      max_length: 20
+      primary_key: true
+      verbose_name: ID类型
+    value:
+      type: BigIntegerField
+      verbose_name: 当前值
+src.kingeye.kmc.dataview.models.BaseModel:
+  module: src.kingeye.kmc.dataview.models
+  abstract: true
+  fields:
+    created_at:
+      type: BigIntegerField
+      'null': true
+      blank: true
+    updated_at:
+      type: BigIntegerField
+      'null': true
+      blank: true
+    created_by:
+      type: CharField
+      max_length: 255
+      'null': true
+      blank: true
+    updated_by:
+      type: CharField
+      max_length: 255
+      'null': true
+      blank: true
+src.kingeye.kmc.dataview.models.Dashboard:
+  module: src.kingeye.kmc.dataview.models
+  abstract: false
+  table: src_dashboard
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+    id:
+      type: AutoField
+      primary_key: true
+      serialize: false
+      verbose_name: ID
+    dashboard_uid:
+      type: CharField
+      max_length: 40
+    dashboard_name:
+      type: CharField
+      max_length: 200
+    datasources:
+      type: CharField
+      max_length: 128
+      'null': true
+    description:
+      type: TextField
+      'null': true
+    space_code:
+      type: CharField
+      max_length: 128
+      default: ''
+src.kingeye.kmc.dataview.models.DashboardUser:
+  module: src.kingeye.kmc.dataview.models
+  abstract: false
+  table: src_dashboarduser
+  fields:
+    dashboard_id:
+      type: IntegerField
+    username:
+      type: CharField
+      max_length: 200
+src.kingeye.kmc.bk_monitor.bkmonitor.utils.model_manager.Model:
+  module: src.kingeye.kmc.bk_monitor.bkmonitor.utils.model_manager
+  abstract: true
+src.kingeye.kmc.bk_monitor.bkmonitor.utils.model_manager.AbstractRecordModel:
+  module: src.kingeye.kmc.bk_monitor.bkmonitor.utils.model_manager
+  abstract: true
+  fields:
+    is_enabled:
+      type: BooleanField
+      default: true
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+      blank: true
+    create_user:
+      type: CharField
+      max_length: 32
+      default: ''
+      blank: true
+    create_time:
+      type: DateTimeField
+      auto_now_add: true
+      blank: true
+    update_user:
+      type: CharField
+      max_length: 32
+      default: ''
+      blank: true
+    update_time:
+      type: DateTimeField
+      auto_now: true
+      blank: true
+src.kingeye.kmc.bk_monitor.bkmonitor.models.config.GlobalConfig:
+  module: src.kingeye.kmc.bk_monitor.bkmonitor.models.config
+  abstract: false
+  table: global_setting
+  fields:
+    key:
+      type: CharField
+      max_length: 255
+      unique: true
+    create_at:
+      type: DateTimeField
+      auto_now_add: true
+    update_at:
+      type: DateTimeField
+      auto_now: true
+    description:
+      type: TextField
+      default: ''
+    data_type:
+      type: CharField
+      choices: DATA_TYPE_CHOICES
+      default: JSON
+      max_length: 32
+    is_advanced:
+      type: BooleanField
+      default: false
+    is_internal:
+      type: BooleanField
+      default: false
+src.kingeye.kmc.bk_monitor.bkmonitor.models.metadata_datasource.MetaDataDataSource:
+  module: src.kingeye.kmc.bk_monitor.bkmonitor.models.metadata_datasource
+  abstract: false
+  table: metadata_datasource
+  fields:
+    space_uid:
+      type: CharField
+      max_length: 256
+      default: ''
+    bk_data_id:
+      type: AutoField
+      primary_key: true
+    data_name:
+      type: CharField
+      max_length: 128
+      db_index: true
+      unique: true
+    token:
+      type: CharField
+      max_length: 256
+      default: ''
+    data_description:
+      type: TextField
+    mq_cluster_id:
+      type: IntegerField
+    mq_config_id:
+      type: IntegerField
+    etl_config:
+      type: TextField
+    is_custom_source:
+      type: BooleanField
+    creator:
+      type: CharField
+      max_length: 32
+    create_time:
+      type: DateTimeField
+      auto_now_add: true
+    last_modify_user:
+      type: CharField
+      max_length: 32
+    last_modify_time:
+      type: DateTimeField
+      auto_now: true
+    custom_label:
+      type: CharField
+      verbose_name: 自定义标签信息
+      max_length: 256
+      default: null
+      'null': true
+    space_type_id:
+      type: CharField
+      max_length: 64
+      'null': true
+      db_index: true
+      help_text: 数据源属于的空间类型，允许授权给对应空间类型
+    is_enable:
+      type: BooleanField
+      verbose_name: 数据源是否启用
+      default: true
+    transfer_cluster_id:
+      type: CharField
+      verbose_name: transfer集群ID
+      max_length: 50
+    is_platform_data_id:
+      type: BooleanField
+      default: false
+      help_text: 如果为平台级 ID，则认为全量可以访问
+    type_label:
+      type: CharField
+      verbose_name: 数据类型标签
+      max_length: 128
+    source_label:
+      type: CharField
+      verbose_name: 数据源标签
+      max_length: 128
+    source_system:
+      type: CharField
+      verbose_name: 请求来源的系统
+      max_length: 256
+src.kingeye.kmc.bk_monitor.core.drf_resource.models.ResourceData:
+  module: src.kingeye.kmc.bk_monitor.core.drf_resource.models
+  abstract: false
+  table: resource_data
+  fields:
+    name:
+      type: CharField
+      max_length: 128
+      db_index: true
+    start_time:
+      type: DateTimeField
+    end_time:
+      type: DateTimeField
+    request_data:
+      type: TextField
+    response_data:
+      type: TextField
+src.kingeye.kmc.bk_monitor.packages.monitor_web.models.base.OperateRecordModelBase:
+  module: src.kingeye.kmc.bk_monitor.packages.monitor_web.models.base
+  abstract: true
+  fields:
+    create_time:
+      type: DateTimeField
+      auto_now_add: true
+    create_user:
+      type: CharField
+      max_length: 32
+      blank: true
+    update_time:
+      type: DateTimeField
+      auto_now: true
+    update_user:
+      type: CharField
+      max_length: 32
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+src.kingeye.kmc.network.topology.models.core_models.BaseModel:
+  module: src.kingeye.kmc.network.topology.models.core_models
+  abstract: true
+  fields:
+    created_at:
+      type: BigIntegerField
+      default: 0
+      verbose_name: 创建时间
+    created_by:
+      type: CharField
+      default: ''
+      max_length: 50
+      verbose_name: 创建人
+    updated_at:
+      type: BigIntegerField
+      default: 0
+      verbose_name: 最后更新时间
+    updated_by:
+      type: CharField
+      default: ''
+      max_length: 50
+      verbose_name: 最后更新人
+src.kingeye.kmc.network.topology.models.core_models.NetworkTopology:
+  module: src.kingeye.kmc.network.topology.models.core_models
+  abstract: false
+  table: network_topology
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+    name:
+      type: CharField
+      max_length: 128
+      verbose_name: 名称
+    thumbnail_image:
+      type: TextField
+      verbose_name: 缩略图
+    job_instance_id:
+      type: BigIntegerField
+      default: 0
+      verbose_name: 拓扑发现作业实例ID
+    job_phase:
+      type: CharField
+      max_length: 30
+      default: ''
+      verbose_name: 拓扑发现作业阶段
+    discovery_status:
+      type: CharField
+      max_length: 15
+      default: ''
+      verbose_name: 拓扑发现状态
+    discovery_failure_reason:
+      type: CharField
+      max_length: 500
+      default: ''
+      verbose_name: 拓扑发现失败报错信息
+src.kingeye.kmc.network.topology.models.core_models.NetworkTopologyElement:
+  module: src.kingeye.kmc.network.topology.models.core_models
+  abstract: false
+  table: network_topology_element
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+    id:
+      type: CharField
+      max_length: 32
+      serialize: false
+      primary_key: true
+    network_topology_id:
+      type: IntegerField
+      default: 0
+      verbose_name: 网络拓扑ID
+    type:
+      type: CharField
+      default: ''
+      max_length: 15
+      verbose_name: 拓扑元素类型
+src.kingeye.kmc.network.topology.models.core_models.NetworkTopologyLink:
+  module: src.kingeye.kmc.network.topology.models.core_models
+  abstract: false
+  table: network_topology_link
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+    name:
+      type: CharField
+      max_length: 256
+      verbose_name: 链路名称
+    associated_node_a:
+      type: CharField
+      max_length: 100
+      verbose_name: 关联节点A
+      'null': true
+      blank: true
+    associated_node_a_name:
+      type: CharField
+      max_length: 100
+      verbose_name: 关联节点A名称
+      'null': true
+      blank: true
+    port_name_a:
+      type: CharField
+      max_length: 100
+      verbose_name: 端口A
+      'null': true
+      blank: true
+    port_display_name_a:
+      type: CharField
+      max_length: 100
+      verbose_name: 端口显示名A
+      'null': true
+      blank: true
+    port_status_a:
+      type: CharField
+      max_length: 100
+      verbose_name: 端口状态A
+      'null': true
+      blank: true
+    associated_node_b:
+      type: CharField
+      max_length: 100
+      verbose_name: 关联节点B
+      'null': true
+      blank: true
+    associated_node_b_name:
+      type: CharField
+      max_length: 100
+      verbose_name: 关联节点B名称
+      'null': true
+      blank: true
+    port_name_b:
+      type: CharField
+      max_length: 100
+      verbose_name: 端口B
+      'null': true
+      blank: true
+    port_display_name_b:
+      type: CharField
+      max_length: 100
+      verbose_name: 端口显示名B
+      'null': true
+      blank: true
+    port_status_b:
+      type: CharField
+      max_length: 100
+      verbose_name: 端口状态B
+      'null': true
+      blank: true
+    network_topology_id:
+      type: IntegerField
+      verbose_name: 网络拓扑ID
+      'null': true
+      blank: true
+    network_topology_element_id:
+      type: CharField
+      max_length: 256
+      verbose_name: 元素ID
+      'null': true
+      blank: true
+    carrieroperator:
+      type: CharField
+      max_length: 64
+      verbose_name: 运营商
+      'null': true
+      blank: true
+    upload_bandwidth:
+      type: CharField
+      max_length: 256
+      verbose_name: 运营商上行带宽
+      'null': true
+      blank: true
+    download_bandwidth:
+      type: CharField
+      max_length: 256
+      verbose_name: 运营商下行带宽
+      'null': true
+      blank: true
+    is_exclusive:
+      type: BooleanField
+      verbose_name: 是否专用链路
+      default: false
+    discovery_at:
+      type: BigIntegerField
+      default: 0
+      verbose_name: 发现时间
+src.kingeye.kmc.utils.files.models.BKJobFileCredential:
+  module: src.kingeye.kmc.utils.files.models
+  abstract: false
+  table: src_bkjobfilecredential
+  fields:
+    bk_biz_id:
+      type: IntegerField
+      db_index: true
+    storage_type:
+      type: CharField
+      max_length: 128
+      db_index: true
+    name:
+      type: CharField
+      max_length: 128
+    type:
+      type: CharField
+      max_length: 64
+    description:
+      type: TextField
+      default: ''
+    credential_id:
+      type: CharField
+      max_length: 128
+    update_time:
+      type: DateTimeField
+      auto_now: true
+      db_index: true
+    create_time:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+src.kingeye.kmc.utils.files.models.BKJobFileSource:
+  module: src.kingeye.kmc.utils.files.models
+  abstract: false
+  table: src_bkjobfilesource
+  fields:
+    credential_id:
+      type: CharField
+      max_length: 128
+      primary_key: true
+    file_source_id:
+      type: IntegerField
+      db_index: true
+    code:
+      type: CharField
+      max_length: 128
+    alias:
+      type: CharField
+      max_length: 128
+    file_prefix:
+      type: CharField
+      max_length: 128
+      default: ''
+    update_time:
+      type: DateTimeField
+      auto_now: true
+      db_index: true
+    create_time:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+src.kingeye.kmc.kmc.kmc_async_task.models.KmcAsyncTask:
+  module: src.kingeye.kmc.kmc.kmc_async_task.models
+  abstract: false
+  table: kmc_async_task
+  fields:
+    task_type:
+      type: CharField
+      max_length: 32
+      verbose_name: _('补偿任务类型')
+      choices: TaskTypeChoices
+      default: TaskStatusType.Ready
+    task_status:
+      type: CharField
+      max_length: 32
+      verbose_name: _('任务状态')
+      choices: TaskStatusTypeChoices
+      default: TaskStatusType.Ready
+    task_action:
+      type: CharField
+      max_length: 32
+      verbose_name: _('任务动作类型')
+      choices: TaskActionChoices
+      default: TaskAction.Create
+    is_params_error:
+      type: BooleanField
+      verbose_name: _('是否是参数错误')
+      default: false
+    error_count:
+      type: IntegerField
+      verbose_name: _('错误次数')
+      default: 0
+src.kingeye.kmc.kmc.kmc_async_task.models.DataCheckLog:
+  module: src.kingeye.kmc.kmc.kmc_async_task.models
+  abstract: false
+  table: src_datachecklog
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      verbose_name: 创建时间
+    log:
+      type: TextField
+      verbose_name: 执行日志
+      default: ''
+src.kingeye.kmc.kmc.kmc_async_task.models.CheckStrategyLog:
+  module: src.kingeye.kmc.kmc.kmc_async_task.models
+  abstract: false
+  table: check_strategy_log
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      verbose_name: 创建时间
+    strategy_id:
+      type: IntegerField
+      verbose_name: 策略ID
+    strategy_name:
+      type: CharField
+      max_length: 255
+      verbose_name: 策略名称
+    check_result:
+      type: CharField
+      max_length: 255
+      verbose_name: 检查结果
+    check_log:
+      type: TextField
+      verbose_name: 检查日志
+    check_task_id:
+      type: CharField
+      max_length: 255
+      verbose_name: task id
+src.kingeye.kmc.cloud_application.models.core_models.TimeInfo:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+src.kingeye.kmc.cloud_application.models.core_models.MaintainerInfo:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: true
+  fields:
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+src.kingeye.kmc.cloud_application.models.core_models.Cloud:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_cloud
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    type:
+      type: CharField
+      max_length: 128
+      'null': false
+      blank: false
+    source:
+      type: CharField
+      max_length: 10
+      choices: SOURCE_CHOICES
+      default: MANUAL
+    name:
+      type: CharField
+      max_length: 64
+      unique: true
+      error_messages: '{''unique'': ''云平台名称不能重复。''}'
+    collect_node:
+      type: ForeignKey
+      on_delete: models.PROTECT
+      'null': true
+      related_name: clouds
+      verbose_name: _('采集节点')
+    collection_frequency:
+      type: PositiveSmallIntegerField
+      default: 1
+    last_collection_at:
+      type: DateTimeField
+      'null': true
+    collection_state:
+      type: CharField
+      max_length: 10
+      choices: COLLECT_STATE_CHOICES
+      default: NORMAL
+    collection_state_msg:
+      type: TextField
+      default: ''
+    last_auto_discovery_at:
+      type: DateTimeField
+      'null': true
+    auto_discovery_state:
+      type: CharField
+      max_length: 10
+      choices: STATE_CHOICES
+      default: UNKNOWN
+    auto_discovery_state_msg:
+      type: TextField
+      default: ''
+    enabled_state:
+      type: BooleanField
+      default: true
+    plugin_version:
+      type: IntegerField
+      default: 1
+    discovery_frequency:
+      type: PositiveSmallIntegerField
+      default: 1
+  relationships:
+    collect_node:
+      type: ForeignKey
+      to: src.models.CollectNode
+      on_delete: models.PROTECT
+      related_name: clouds
+src.kingeye.kmc.cloud_application.models.core_models.CloudResource:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_cloudresource
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    instanceid:
+      type: CharField
+      max_length: 128
+    type:
+      type: CharField
+      max_length: 15
+      choices: CLOUD_RESOURCE_TYPE_CHOICES
+    cloud:
+      type: ForeignKey
+      verbose_name: 云平台
+      related_name: resources
+      on_delete: models.CASCADE
+    name:
+      type: CharField
+      max_length: 255
+    status:
+      type: PositiveSmallIntegerField
+      default: UNKNOWN
+    monitor_state:
+      type: BooleanField
+      default: true
+    region_id:
+      type: CharField
+      max_length: 100
+      default: ''
+    object_model_code:
+      type: CharField
+      max_length: 255
+      default: ''
+      verbose_name: _('内置子对象模型code')
+  relationships:
+    cloud:
+      type: ForeignKey
+      to: src.models.Cloud
+      on_delete: models.CASCADE
+      related_name: resources
+src.kingeye.kmc.cloud_application.models.core_models.CloudResourceMonitorMetricViews:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: cloud_resource_inst_metric_views
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    cloud_resource_id:
+      type: IntegerField
+      verbose_name: _('云资源id')
+    metric_code:
+      type: CharField
+      max_length: 255
+      verbose_name: _('指标code')
+    order_num:
+      type: IntegerField
+      verbose_name: _('排序值')
+    enabled_state:
+      type: BooleanField
+      default: true
+src.kingeye.kmc.cloud_application.models.core_models.AlarmStrategyGroup:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_alarmstrategygroup
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    name:
+      type: CharField
+      max_length: 64
+    type:
+      type: CharField
+      max_length: 16
+      choices: TYPE_CHOICES
+    cloud_type:
+      type: CharField
+      max_length: 128
+      default: ''
+    cloud_targets:
+      type: ManyToManyField
+      verbose_name: 监控目标--云平台
+      through: AlarmStrategyGroupCloudResourceRelation
+    cloud_resource_targets:
+      type: ManyToManyField
+      verbose_name: 监控目标--云资源
+      through: AlarmStrategyGroupCloudResourceRelation
+    notice_groups:
+      type: ManyToManyField
+      verbose_name: 通知组
+      through: AlarmStrategyGroupNoticeGroupRelation
+    enabled_state:
+      type: BooleanField
+      default: true
+  relationships:
+    cloud_targets:
+      type: ManyToManyField
+      to: src.models.Cloud
+      through: AlarmStrategyGroupCloudResourceRelation
+    cloud_resource_targets:
+      type: ManyToManyField
+      to: src.models.CloudResource
+      through: AlarmStrategyGroupCloudResourceRelation
+    notice_groups:
+      type: ManyToManyField
+      to: src.models.NoticeGroup
+      through: AlarmStrategyGroupNoticeGroupRelation
+src.kingeye.kmc.cloud_application.models.core_models.AlarmStrategyGroupCloudResourceRelation:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_alarmstrategygroupcloudresourcerelation
+  fields:
+    alarm_strategy_group:
+      type: ForeignKey
+      verbose_name: 告警策略组
+      on_delete: models.CASCADE
+    cloud:
+      type: ForeignKey
+      verbose_name: 云平台
+      on_delete: models.CASCADE
+      'null': true
+    cloud_resource:
+      type: ForeignKey
+      verbose_name: 云资源
+      on_delete: models.CASCADE
+      'null': true
+  relationships:
+    alarm_strategy_group:
+      type: ForeignKey
+      to: src.models.AlarmStrategyGroup
+      on_delete: models.CASCADE
+    cloud:
+      type: ForeignKey
+      to: src.models.Cloud
+      on_delete: models.CASCADE
+    cloud_resource:
+      type: ForeignKey
+      to: src.models.CloudResource
+      on_delete: models.CASCADE
+src.kingeye.kmc.cloud_application.models.core_models.AlarmStrategyGroupNoticeGroupRelation:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_alarmstrategygroupnoticegrouprelation
+  fields:
+    alarm_strategy_group:
+      type: ForeignKey
+      verbose_name: 告警策略组
+      on_delete: models.CASCADE
+    notice_group:
+      type: ForeignKey
+      verbose_name: 通知组
+      on_delete: models.CASCADE
+  relationships:
+    alarm_strategy_group:
+      type: ForeignKey
+      to: src.models.AlarmStrategyGroup
+      on_delete: models.CASCADE
+    notice_group:
+      type: ForeignKey
+      to: src.models.NoticeGroup
+      on_delete: models.CASCADE
+src.kingeye.kmc.cloud_application.models.core_models.AlarmStrategy:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_alarmstrategy
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+      'null': true
+    name:
+      type: CharField
+      max_length: 64
+    cloud_type:
+      type: CharField
+      max_length: 128
+    cloud_resource_type:
+      type: CharField
+      max_length: 15
+      choices: CLOUD_RESOURCE_TYPE_CHOICES
+    item_type:
+      type: CharField
+      max_length: 8
+      choices: ITEM_TYPE_CHOICES
+    notice_groups:
+      type: ManyToManyField
+      verbose_name: 通知组
+      through: AlarmStrategyNoticeGroupRelation
+      related_name: alarmstrategies
+    enabled_state:
+      type: BooleanField
+      default: true
+    alarm_strategy_group:
+      type: ForeignKey
+      verbose_name: 告警策略组
+      on_delete: models.CASCADE
+      'null': true
+      related_name: alarmstrategies
+  relationships:
+    notice_groups:
+      type: ManyToManyField
+      to: src.models.NoticeGroup
+      related_name: alarmstrategies
+      through: AlarmStrategyNoticeGroupRelation
+    alarm_strategy_group:
+      type: ForeignKey
+      to: src.models.AlarmStrategyGroup
+      on_delete: models.CASCADE
+      related_name: alarmstrategies
+src.kingeye.kmc.cloud_application.models.core_models.CloudAlarmStrategy:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_cloudalarmstrategy
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    alarm_strategy:
+      type: ForeignKey
+      verbose_name: 告警策略
+      on_delete: models.CASCADE
+      related_name: cloudalarmstrategies
+    cloud_strategy_id:
+      type: CharField
+      max_length: 128
+    cloud:
+      type: ForeignKey
+      verbose_name: 云平台
+      on_delete: models.CASCADE
+      'null': true
+  relationships:
+    alarm_strategy:
+      type: ForeignKey
+      to: src.models.AlarmStrategy
+      on_delete: models.CASCADE
+      related_name: cloudalarmstrategies
+    cloud:
+      type: ForeignKey
+      to: src.models.Cloud
+      on_delete: models.CASCADE
+src.kingeye.kmc.cloud_application.models.core_models.AlarmStrategyCloudResourceRelation:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_alarmstrategycloudresourcerelation
+  fields:
+    alarm_strategy_id:
+      type: IntegerField
+      'null': true
+    cloud_resource_id:
+      type: IntegerField
+      'null': true
+    object_select_type:
+      type: CharField
+      choices: ObjectSelectType.TEMPLATE_CHOICES
+      default: inst
+      max_length: 15
+src.kingeye.kmc.cloud_application.models.core_models.AlarmStrategyNoticeGroupRelation:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_alarmstrategynoticegrouprelation
+  fields:
+    alarm_strategy:
+      type: ForeignKey
+      verbose_name: 告警策略
+      on_delete: models.CASCADE
+    notice_group:
+      type: ForeignKey
+      verbose_name: 通知组
+      on_delete: models.CASCADE
+  relationships:
+    alarm_strategy:
+      type: ForeignKey
+      to: src.models.AlarmStrategy
+      on_delete: models.CASCADE
+    notice_group:
+      type: ForeignKey
+      to: src.models.NoticeGroup
+      on_delete: models.CASCADE
+src.kingeye.kmc.cloud_application.models.core_models.AlarmStrategyGroupTemplateRelation:
+  module: src.kingeye.kmc.cloud_application.models.core_models
+  abstract: false
+  table: src_alarmstrategygrouptemplaterelation
+  fields:
+    alarm_strategy_group:
+      type: ForeignKey
+      verbose_name: 告警策略组
+      on_delete: models.CASCADE
+    monitor_template:
+      type: ForeignKey
+      verbose_name: 监控模板
+      on_delete: models.CASCADE
+  relationships:
+    alarm_strategy_group:
+      type: ForeignKey
+      to: src.models.AlarmStrategyGroup
+      on_delete: models.CASCADE
+    monitor_template:
+      type: ForeignKey
+      to: src.models.MonitorTemplate
+      on_delete: models.CASCADE
+src.kingeye.common.tests.test_queryset_utils.TestModel:
+  module: src.kingeye.common.tests.test_queryset_utils
+  abstract: false
+  table: src_testmodel
+  fields:
+    name:
+      type: CharField
+      max_length: 100
+src.kingeye.common.tests.test_queryset_utils.TestModelWithCustomField:
+  module: src.kingeye.common.tests.test_queryset_utils
+  abstract: false
+  table: src_testmodelwithcustomfield
+  fields:
+    name:
+      type: CharField
+      max_length: 100
+    custom_id:
+      type: IntegerField
+      unique: true
+    code:
+      type: CharField
+      max_length: 50
+      unique: true
+src.kingeye.kingeye_self_monitor.models.service_model.Service:
+  module: src.kingeye.kingeye_self_monitor.models.service_model
+  abstract: false
+  table: self_monitor_service
+  fields:
+    service_id:
+      type: AutoField
+      primary_key: true
+    service_name:
+      type: CharField
+      max_length: 64
+      unique: true
+    category:
+      type: CharField
+      max_length: 32
+      choices: ServiceCategoryEnum.get_choices()
+    order_number:
+      type: IntegerField
+      default: 0
+src.kingeye.kingeye_self_monitor.models.instance_model.Instance:
+  module: src.kingeye.kingeye_self_monitor.models.instance_model
+  abstract: false
+  table: self_monitor_instance
+  fields:
+    instance_id:
+      type: AutoField
+      primary_key: true
+    instance_port:
+      type: IntegerField
+src.kingeye.kingeye_self_monitor.models.metric_model.Metric:
+  module: src.kingeye.kingeye_self_monitor.models.metric_model
+  abstract: false
+  table: self_monitor_metric
+  fields:
+    metric_id:
+      type: AutoField
+      primary_key: true
+    metric:
+      type: CharField
+      max_length: 64
+      unique: true
+    description:
+      type: CharField
+      max_length: 255
+src.kingeye.kingeye_self_monitor.models.service_instance_metric_model.ServiceInstanceMetric:
+  module: src.kingeye.kingeye_self_monitor.models.service_instance_metric_model
+  abstract: false
+  table: self_monitor_serviceinstancemetric
+  fields:
+    service_id:
+      type: IntegerField
+    instance_id:
+      type: IntegerField
+    metric_id:
+      type: IntegerField
+    value:
+      type: CharField
+      max_length: 128
+    updated_at:
+      type: BigIntegerField
+    detail:
+      type: TextField
+src.kingeye.kingeye_self_monitor.models.service_metric_model.ServiceMetric:
+  module: src.kingeye.kingeye_self_monitor.models.service_metric_model
+  abstract: false
+  table: self_monitor_servicemetric
+  fields:
+    service_id:
+      type: IntegerField
+    metric_id:
+      type: IntegerField
+    value:
+      type: CharField
+      max_length: 128
+    updated_at:
+      type: BigIntegerField
+    detail:
+      type: TextField
+src.kingeye.base.domains.metric_plugin.models.MetricPluginModel:
+  module: src.kingeye.base.domains.metric_plugin.models
+  abstract: false
+  table: metric_plugin
+  fields:
+    bk_tenant_id:
+      type: CharField
+      max_length: 64
+      help_text: 租户ID
+    bk_biz_id:
+      type: IntegerField
+      help_text: 归属业务ID
+    is_global:
+      type: BooleanField
+      default: false
+      help_text: 是否全局插件
+    is_internal:
+      type: BooleanField
+      default: false
+      help_text: 是否内置插件
+    plugin_id:
+      type: CharField
+      max_length: 64
+      unique: true
+      help_text: 插件ID
+    type:
+      type: CharField
+      max_length: 32
+      help_text: 插件类型
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      help_text: 创建时间
+    created_by:
+      type: CharField
+      max_length: 255
+      default: ''
+      help_text: 创建用户
+    is_deleted:
+      type: BooleanField
+      default: false
+      help_text: 是否删除
+    label:
+      type: CharField
+      max_length: 64
+      help_text: 标签
+src.kingeye.base.domains.metric_plugin.models.MetricPluginVersionModel:
+  module: src.kingeye.base.domains.metric_plugin.models
+  abstract: false
+  table: metric_plugin_version
+  fields:
+    plugin:
+      type: ForeignKey
+      on_delete: models.PROTECT
+      related_name: versions
+      help_text: 插件
+    bk_tenant_id:
+      type: CharField
+      max_length: 64
+      help_text: 租户ID
+    bk_biz_id:
+      type: IntegerField
+      help_text: 归属业务ID
+    name:
+      type: CharField
+      max_length: 255
+      help_text: 插件名称
+    description_md:
+      type: TextField
+      help_text: 描述
+      blank: true
+    logo:
+      type: ImageField
+      help_text: logo
+      blank: true
+      upload_to: metric_plugin/logo/
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+      help_text: 更新时间
+    updated_by:
+      type: CharField
+      max_length: 255
+      help_text: 更新用户
+      blank: true
+    enable_metric_discovery:
+      type: BooleanField
+      default: false
+      help_text: 自动发现指标开关
+    version_major:
+      type: IntegerField
+      help_text: 主版本号
+    version_minor:
+      type: IntegerField
+      help_text: 次版本号
+    version_log:
+      type: TextField
+      help_text: 版本日志
+      blank: true
+    status:
+      type: CharField
+      max_length: 32
+      help_text: 状态
+      choices: StatusChoices.choices
+  relationships:
+    plugin:
+      type: ForeignKey
+      to: src.models.MetricPluginModel
+      on_delete: models.PROTECT
+      related_name: versions
+src.kingeye.base.domains.object_model.models.ObjectModelGroupORM:
+  module: src.kingeye.base.domains.object_model.models
+  abstract: false
+  table: object_model_group_v2
+  fields:
+    object_model_group_id:
+      type: AutoField
+      primary_key: true
+    parent_object_model_group:
+      type: ForeignKey
+      verbose_name: _('父级分组')
+      on_delete: models.PROTECT
+      'null': true
+    object_model_group_code:
+      type: CharField
+      unique: true
+      max_length: 255
+    object_model_group_name:
+      type: CharField
+      max_length: 255
+    is_default:
+      type: BooleanField
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+  relationships:
+    parent_object_model_group:
+      type: ForeignKey
+      to: self
+      on_delete: models.PROTECT
+src.kingeye.base.domains.object_model.models.ObjectModelORM:
+  module: src.kingeye.base.domains.object_model.models
+  abstract: false
+  table: object_model_v2
+  fields:
+    object_model_id:
+      type: AutoField
+      primary_key: true
+    object_model_code:
+      type: CharField
+      unique: true
+      max_length: 255
+    object_model_name:
+      type: CharField
+      unique: true
+      max_length: 255
+    object_model_group:
+      type: ForeignKey
+      verbose_name: _('对象模型分组')
+      on_delete: models.PROTECT
+    is_default:
+      type: BooleanField
+      default: false
+    datasource:
+      type: CharField
+      choices: DatasourceChoice.choices
+      max_length: 32
+    bk_cmdb_obj_id:
+      type: CharField
+      default: ''
+      max_length: 255
+    display_fields:
+      type: JSONField
+      default: list
+    inst_display_name:
+      type: CharField
+      verbose_name: _('实例展示名')
+      max_length: 128
+      default: ''
+    host_related_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    operator_fields:
+      type: JSONField
+      default: list
+    topo_related_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    port_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    custom_model_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    model_related_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    related_model_type:
+      type: CharField
+      verbose_name: _('关联类型')
+      max_length: 8
+      choices: RelateTypeChoice.choices
+      default: RelateTypeChoice.EMPTY
+    related_model_code:
+      type: CharField
+      default: ''
+      max_length: 255
+      blank: true
+    ar_dimensionality:
+      type: CharField
+      max_length: 64
+      default: ''
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+  relationships:
+    object_model_group:
+      type: ForeignKey
+      to: src.models.ObjectModelGroupORM
+      on_delete: models.PROTECT
+src.kingeye.base.domains.object_model.models.ObjectModelUsageRecordORM:
+  module: src.kingeye.base.domains.object_model.models
+  abstract: false
+  table: object_model_usage_record_v2
+  fields:
+    id:
+      type: BigAutoField
+      primary_key: true
+      auto_created: true
+    object_model:
+      type: ForeignKey
+      to: ObjectModelORM
+      on_delete: models.PROTECT
+      verbose_name: _('监控对象ID')
+    app_id:
+      type: CharField
+      max_length: 64
+    app_name:
+      type: CharField
+      max_length: 64
+    module_id:
+      type: CharField
+      max_length: 255
+    module_name:
+      type: CharField
+      max_length: 255
+    inst_id:
+      type: CharField
+      max_length: 255
+    inst_name:
+      type: CharField
+      max_length: 255
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+  relationships:
+    object_model:
+      type: ForeignKey
+      to: null
+      on_delete: models.PROTECT
+src.kingeye.base.domains.space.models.SpaceModel:
+  module: src.kingeye.base.domains.space.models
+  abstract: false
+  table: src_spacemodel
+  fields:
+    bk_tenant_id:
+      type: CharField
+      verbose_name: 租户ID
+      max_length: 64
+    bk_biz_id:
+      type: IntegerField
+      verbose_name: 业务ID
+      unique: true
+    space_uid:
+      type: CharField
+      verbose_name: 空间UID
+      max_length: 128
+      unique: true
+    space_type:
+      type: CharField
+      verbose_name: 空间类型
+      max_length: 16
+    space_id:
+      type: CharField
+      verbose_name: 空间ID
+      max_length: 64
+    space_name:
+      type: CharField
+      verbose_name: 空间名称
+      max_length: 128
+    status:
+      type: CharField
+      verbose_name: 空间状态
+      max_length: 16
+    timezone:
+      type: CharField
+      verbose_name: 时区
+      max_length: 32
+    language:
+      type: CharField
+      verbose_name: 语言
+      max_length: 32
+    configs:
+      type: JSONField
+      verbose_name: 配置
+src.kingeye.base.domains.space.models.OldSpaceModel:
+  module: src.kingeye.base.domains.space.models
+  abstract: false
+  table: src_oldspacemodel
+src.kingeye.base.domains.space.models.OldSpaceResourceModel:
+  module: src.kingeye.base.domains.space.models
+  abstract: false
+  table: src_oldspaceresourcemodel
+src.kingeye.base.infras.db_models.base.BaseModel:
+  module: src.kingeye.base.infras.db_models.base
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+src.kingeye.base.infras.db_models.base.SoftDeleteBaseModel:
+  module: src.kingeye.base.infras.db_models.base
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+src.kingeye.base.infras.db_models.base.TimeInfoMixin:
+  module: src.kingeye.base.infras.db_models.base
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+src.kingeye.base.infras.db_models.base.MaintainerInfoMixin:
+  module: src.kingeye.base.infras.db_models.base
+  abstract: true
+  fields:
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
+src.kingeye.base.candidacy.models.declaratives.inner.strategy_item.StrategyItem:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.strategy_item
+  abstract: false
+  table: home_application_strategyitem
+  fields:
+    strategy_config_id:
+      type: IntegerField
+      verbose_name: _('策略配置ID')
+    trigger_config:
+      type: JSONField
+      verbose_name: _('触发条件配置')
+    no_data_config:
+      type: JSONField
+      verbose_name: _('无数据告警配置')
+    recovery_config:
+      type: JSONField
+      verbose_name: _('恢复条件配置')
+    alarm_level:
+      type: IntegerField
+      'null': true
+      verbose_name: _('事件指标告警级别')
+    agg_method:
+      type: CharField
+      choices: MethodChoices
+      max_length: 20
+      verbose_name: _('汇聚方式')
+      default: MethodType.AVG
+    agg_interval:
+      type: IntegerField
+      verbose_name: _('汇聚周期')
+      default: 60
+    agg_interval_unit:
+      type: CharField
+      max_length: 10
+      default: sec
+    agg_condition:
+      type: JSONField
+      verbose_name: _('监控条件')
+      default: list
+    agg_dimension:
+      type: JSONField
+      verbose_name: _('监控维度')
+      default: list
+    functions:
+      type: JSONField
+      verbose_name: _('指标函数')
+      default: list
+    is_default:
+      type: BooleanField
+      default: true
+      verbose_name: _('默认配置')
+    query_configs:
+      type: JSONField
+      verbose_name: _('查询条件')
+      default: list
+    connector:
+      type: CharField
+      max_length: 20
+      verbose_name: _('同级别告警的关系')
+      default: ''
+    expression:
+      type: CharField
+      max_length: 20
+      verbose_name: _('表达式')
+      default: ''
+    is_enabled:
+      type: BooleanField
+      default: true
+src.kingeye.base.candidacy.models.declaratives.inner.alarm_event.AlarmEvent:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.alarm_event
+  abstract: false
+  table: home_application_alarmevent
+  fields:
+    id:
+      type: BigIntegerField
+      primary_key: true
+    alarm_id:
+      type: CharField
+      max_length: 50
+      verbose_name: _('告警ID')
+    alarm_obj:
+      type: CharField
+      max_length: 120
+      verbose_name: _('告警对象')
+    begin_time:
+      type: DateTimeField
+      default: '1980-01-01 08:00:00'
+    create_time:
+      type: DateTimeField
+      default: '1980-01-01 08:00:00'
+      db_index: true
+    end_time:
+      type: DateTimeField
+      default: '1980-01-01 08:00:00'
+    anomaly_count:
+      type: IntegerField
+      verbose_name: _('告警次数')
+      default: 1
+    event_message:
+      type: JSONField
+      verbose_name: _('告警详情')
+    strategy_name:
+      type: TextField
+      verbose_name: _('触发策略')
+    strategy_id:
+      type: IntegerField
+      verbose_name: _('触发策略ID')
+      default: 0
+    strategy_detail:
+      type: JSONField
+      verbose_name: _('触发的策略配置')
+    level:
+      type: CharField
+      verbose_name: _('告警级别')
+      max_length: 20
+    event_status:
+      type: CharField
+      max_length: 20
+      choices: EVENT_TYPE_CHOICE
+      verbose_name: _('告警状态')
+    bk_biz_id:
+      type: IntegerField
+      verbose_name: _('事件所属业务ID')
+    bk_biz_name:
+      type: CharField
+      verbose_name: _('事件所属业务名称')
+      max_length: 100
+      default: ''
+    bk_obj_id:
+      type: CharField
+      max_length: 120
+      verbose_name: _('监控对象类型')
+      default: ''
+    notice_time:
+      type: DateTimeField
+      'null': true
+      verbose_name: _('通知时间')
+    bk_inst_id:
+      type: IntegerField
+      verbose_name: _('模型实例ID')
+      'null': true
+    alarm_obj_display:
+      type: JSONField
+      verbose_name: _('事件监控对象展示详情')
+      default: list
+    alarm_dimension_display:
+      type: JSONField
+      verbose_name: _('事件维度详情')
+      default: list
+    cloud_id:
+      type: IntegerField
+      verbose_name: 云平台实例ID
+      default: 0
+    cloud_resource_id:
+      type: IntegerField
+      verbose_name: 云资源实例ID
+      default: 0
+    cloud_resource_type:
+      type: CharField
+      max_length: 20
+      verbose_name: _('云资源类型')
+      default: ''
+    alarm_source_type:
+      type: CharField
+      verbose_name: 告警源类型
+      max_length: 10
+      default: basic
+    metric_query_params:
+      type: JSONField
+      verbose_name: _('视图查询参数')
+      default: null
+      'null': true
+    k8s_inst_id:
+      type: CharField
+      verbose_name: _('容器实例ID')
+      max_length: 128
+      'null': true
+src.kingeye.base.candidacy.models.declaratives.inner.strategy_config.StrategyConfig:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.strategy_config
+  abstract: false
+  table: home_application_strategyconfig
+  fields:
+    alias_name:
+      type: TextField
+      default: ''
+    table_id:
+      type: CharField
+      max_length: 128
+      verbose_name: _('结果表明')
+      default: ''
+    field_name:
+      type: CharField
+      max_length: 128
+      verbose_name: _('字段')
+      default: ''
+    item_name:
+      type: CharField
+      max_length: 128
+      verbose_name: _('监控项指标')
+      default: ''
+    description:
+      type: CharField
+      max_length: 128
+      default: ''
+      verbose_name: _('监控项说明')
+    monitor_item_type:
+      type: CharField
+      choices: CONFIG_TYPE_CHOICES
+      max_length: 20
+      verbose_name: _('监控项类型')
+    monitor_template_id:
+      type: IntegerField
+    metric_primary_id:
+      type: IntegerField
+      'null': true
+      verbose_name: _('衍生指标主键id')
+    name:
+      type: CharField
+      max_length: 256
+      verbose_name: _('监控项名')
+      default: ''
+    metric_source:
+      type: CharField
+      max_length: 20
+      choices: METRIC_SOURCE
+      verbose_name: _('数据来源字段')
+      default: ''
+    source_config:
+      type: JSONField
+      verbose_name: _('来源配置信息')
+      default: dict
+    data_source:
+      type: CharField
+      max_length: 256
+      verbose_name: _('数据来源')
+      default: ''
+    field_tag:
+      type: CharField
+      max_length: 128
+      verbose_name: _('指标标签')
+      default: ''
+      'null': true
+src.kingeye.base.candidacy.models.declaratives.inner.object_model_usage_record.ObjectModelUsageRecord:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.object_model_usage_record
+  abstract: false
+  table: object_model_usage_record_v2
+  fields:
+    id:
+      type: BigAutoField
+      primary_key: true
+      auto_created: true
+    object_model:
+      type: ForeignKey
+      to: ObjectModel
+      on_delete: models.PROTECT
+      verbose_name: _('监控对象ID')
+    app_id:
+      type: CharField
+      max_length: 16
+    app_name:
+      type: CharField
+      max_length: 20
+    module_id:
+      type: CharField
+      max_length: 255
+    module_name:
+      type: CharField
+      max_length: 255
+    inst_id:
+      type: CharField
+      max_length: 255
+    inst_name:
+      type: CharField
+      max_length: 255
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+  relationships:
+    object_model:
+      type: ForeignKey
+      to: null
+      on_delete: models.PROTECT
+src.kingeye.base.candidacy.models.declaratives.inner.strategy_detect_algorithm.StrategyDetectAlgorithm:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.strategy_detect_algorithm
+  abstract: false
+  table: home_application_strategydetectalgorithm
+  fields:
+    algorithm_type:
+      type: CharField
+      choices: ALGORITHM_CHOICES
+      max_length: 20
+      verbose_name: _('检测算法类型')
+    algorithm_config:
+      type: JSONField
+      verbose_name: _('算法配置')
+    strategy_item_id:
+      type: IntegerField
+      verbose_name: _('监控项')
+    level:
+      type: IntegerField
+      choices: NoticeLevelChoices
+      verbose_name: _('告警级别')
+    level_status:
+      type: CharField
+      choices: LevelStatusChoices
+      max_length: 10
+      verbose_name: _('级别状态')
+      default: ''
+src.kingeye.base.candidacy.models.declaratives.inner.object_model_group.ObjectModelGroup:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.object_model_group
+  abstract: false
+  table: object_model_group_v2
+  fields:
+    object_model_group_id:
+      type: AutoField
+      primary_key: true
+    parent_object_model_group:
+      type: ForeignKey
+      verbose_name: _('父级分组')
+      on_delete: models.PROTECT
+      'null': true
+    object_model_group_code:
+      type: CharField
+      unique: true
+      max_length: 255
+    object_model_group_name:
+      type: CharField
+      max_length: 255
+    is_default:
+      type: BooleanField
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+  relationships:
+    parent_object_model_group:
+      type: ForeignKey
+      to: self
+      on_delete: models.PROTECT
+src.kingeye.base.candidacy.models.declaratives.inner.monitor_metric.MonitorMetric:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.monitor_metric
+  abstract: false
+  table: home_application_monitormetric
+  fields:
+    table_id:
+      type: CharField
+      verbose_name: _('结果表名')
+      max_length: 128
+    table_name:
+      type: CharField
+      verbose_name: _('结果表中文名')
+      default: ''
+      max_length: 128
+    field_name:
+      type: CharField
+      max_length: 255
+    field_type:
+      type: CharField
+      max_length: 32
+      choices: FIELD_TYPE_CHOICES
+    unit:
+      type: CharField
+      max_length: 32
+      default: ''
+    description:
+      type: TextField
+    tag:
+      type: CharField
+      max_length: 16
+      choices: TAG_CHOICES
+    is_enable:
+      type: BooleanField
+    plugin_type:
+      type: CharField
+      max_length: 32
+    plugin_id:
+      type: CharField
+      max_length: 64
+    plugin_display_name:
+      type: CharField
+      default: ''
+      max_length: 64
+    unit_suffix_list:
+      type: JSONField
+      default: list
+    unit_suffix_id:
+      type: CharField
+      default: ''
+      max_length: 36
+    metric_unit:
+      type: CharField
+      default: ''
+      max_length: 36
+    uuid:
+      type: CharField
+      default: ''
+      max_length: 255
+src.kingeye.base.candidacy.models.declaratives.inner.object_model.ObjectModel:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.object_model
+  abstract: false
+  table: object_model_v2
+  fields:
+    object_model_id:
+      type: AutoField
+      primary_key: true
+    object_model_code:
+      type: CharField
+      unique: true
+      max_length: 255
+    object_model_name:
+      type: CharField
+      unique: true
+      max_length: 255
+    object_model_group:
+      type: ForeignKey
+      verbose_name: _('对象模型分组')
+      on_delete: models.PROTECT
+    is_default:
+      type: BooleanField
+      default: false
+    datasource:
+      type: CharField
+      choices: DatasourceChoice.choices
+      max_length: 32
+    ar_dimensionality:
+      type: CharField
+      max_length: 64
+      default: ''
+    bk_cmdb_obj_id:
+      type: CharField
+      default: ''
+      max_length: 255
+    display_fields:
+      type: JSONField
+      default: list
+    inst_display_name:
+      type: CharField
+      verbose_name: _('实例展示名')
+      max_length: 128
+      default: ''
+    host_related_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    operator_fields:
+      type: JSONField
+      default: list
+    topo_related_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    port_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    custom_model_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    model_related_field:
+      type: CharField
+      default: ''
+      max_length: 255
+    related_model_type:
+      type: CharField
+      verbose_name: _('关联类型')
+      max_length: 8
+      choices: RelateTypeChoice.choices
+      default: RelateTypeChoice.EMPTY
+    related_model_code:
+      type: CharField
+      default: ''
+      max_length: 255
+      blank: true
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+  relationships:
+    object_model_group:
+      type: ForeignKey
+      to: src.models.ObjectModelGroup
+      on_delete: models.PROTECT
+src.kingeye.base.candidacy.models.declaratives.inner.parameter_set.ParameterSet:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.parameter_set
+  abstract: false
+  table: home_application_parameterset
+  fields:
+    set_id:
+      type: CharField
+      unique: true
+      max_length: 64
+    set_name:
+      type: CharField
+      max_length: 128
+      verbose_name: _('参数集名称')
+    config_json:
+      type: JSONField
+      default: list
+    task_config:
+      type: JSONField
+      default: list
+src.kingeye.base.candidacy.models.declaratives.inner.dynamic_group_member.DynamicGroupMember:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.dynamic_group_member
+  abstract: false
+  table: dynamic_group_member
+  fields:
+    dynamic_group_id:
+      type: IntegerField
+    member:
+      type: JSONField
+src.kingeye.base.candidacy.models.declaratives.inner.sys_setting.SysSetting:
+  module: src.kingeye.base.candidacy.models.declaratives.inner.sys_setting
+  abstract: false
+  table: home_application_syssetting
+  fields:
+    key:
+      type: CharField
+      verbose_name: _('设置项')
+      max_length: 64
+      unique: true
+    value:
+      type: TextField
+      verbose_name: _('设置值')
+    desc:
+      type: TextField
+      verbose_name: _('设置描述')
+      default: ''
+? src.kingeye.base.candidacy.models.declaratives.inner.alarm_strategy_cloud_resource_relation.AlarmStrategyCloudResourceRelation
+: module: src.kingeye.base.candidacy.models.declaratives.inner.alarm_strategy_cloud_resource_relation
+  abstract: false
+  table: cloud_application_alarmstrategycloudresourcerelation
+  fields:
+    alarm_strategy_id:
+      type: IntegerField
+      'null': true
+    cloud_resource_id:
+      type: IntegerField
+      'null': true
+    object_select_type:
+      type: CharField
+      choices: ObjectSelectType.TEMPLATE_CHOICES
+      default: inst
+      max_length: 15
+? src.kingeye.base.candidacy.models.declaratives.inner.alarm_strategy_group_template_relation.AlarmStrategyGroupTemplateRelation
+: module: src.kingeye.base.candidacy.models.declaratives.inner.alarm_strategy_group_template_relation
+  abstract: false
+  table: cloud_application_alarmstrategygrouptemplaterelation
+  fields:
+    alarm_strategy_group_id:
+      type: IntegerField
+      verbose_name: 告警策略组
+    monitor_template_id:
+      type: IntegerField
+      verbose_name: 监控模板
+src.kingeye.base.candidacy.infras.models.base_model.BaseModel:
+  module: src.kingeye.base.candidacy.infras.models.base_model
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+src.kingeye.base.candidacy.infras.models.base_model.SoftDeleteBaseModel:
+  module: src.kingeye.base.candidacy.infras.models.base_model
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+    created_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+    updated_by:
+      type: CharField
+      max_length: 100
+      blank: true
+    is_deleted:
+      type: BooleanField
+      default: false
+src.kingeye.base.candidacy.infras.models.base_model.TimeInfoMixin:
+  module: src.kingeye.base.candidacy.infras.models.base_model
+  abstract: true
+  fields:
+    created_at:
+      type: DateTimeField
+      auto_now_add: true
+      db_index: true
+    updated_at:
+      type: DateTimeField
+      auto_now: true
+src.kingeye.base.candidacy.infras.models.base_model.MaintainerInfoMixin:
+  module: src.kingeye.base.candidacy.infras.models.base_model
+  abstract: true
+  fields:
+    created_by:
+      type: CharField
+      max_length: 32
+      default: ''
+    updated_by:
+      type: CharField
+      max_length: 32
+      default: ''
